@@ -1,0 +1,75 @@
+
+table{
+	color: #009cdd;
+	width:1050px; 
+	margin:0 auto; 
+	margin-bottom:20px; 
+	margin-top:20px; 
+	border-collapse: collapse; 
+	//border: 2px solid #bbbbbb;
+}
+
+table th{
+	background-color: #272727;
+	height: 50px;
+	vertical-align: middle;
+	color: white;
+	background: url(http://localhost:3000/assets/module-gradient.gif);
+	background-size: 100% 100%;
+	border:none;
+
+}
+table tr:first-child th:first-child {
+    -moz-border-radius-topleft:10px;
+    -webkit-border-top-left-radius:10px;
+    border-top-left-radius:10px
+}
+
+table tr:first-child th:last-child {
+    -moz-border-radius-topright:10px;
+    -webkit-border-top-right-radius:10px;
+    border-top-right-radius:10px
+}
+table td:first-child{
+	border-left: none;
+}
+table td:last-child{
+	border-right: none;
+}
+
+table th.bg{
+	height: 100%;
+}
+
+table tr:nth-of-type(2n + 2) {
+    background-color: #232323;
+}
+table tr:nth-of-type(2n + 2) {
+    background-color: #111111;
+    padding: 5px;
+}
+table tr{
+	border-left: solid 2px #323232;
+	border-right: solid 2px #323232;
+}
+table tr:first-child {
+    border-left: none;
+	border-right: none;
+}
+table tr:last-child td {
+    border-bottom: none;
+}
+table tr:last-child {
+    border-bottom: solid 2px #323232;
+}
+table td{
+	padding: 10px;
+	border: solid 2px #000;
+}
+
+
+table a {
+	color: #a6d94c;
+}
+
+

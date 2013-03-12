@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="text/css" href="/css/ControlPanelItem.css">
+
+<div id="clientsMenu" class="menuPane" >
+	<%= render(:partial => "control_panel/menu") %>
+</div>
+<div id="infoPane">
+	<link rel="stylesheet" type="text/css" href="/css/table.css" /> 
+	<!--<div class="module" style="width:100%; "> -->
+	<% if session[:isAdmin] == true %>
+		<%= link_to("Add a new client", {:action => 'new'}, :class => 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover', :id => 'addItem') %>
+	<%end%>
+	<table>
+		<tr>
+			<th>Client Name</th>
+			<th>View Client details</th>
+			<th>Edit Client details</th>
+			<th>Delete Client</th>
+		</tr>
+	<% @client.each do |client| %>
+		<tr>
+			<td><%= client.clientName %> </td>
+			<td><%= link_to("Show", {:action => 'show', :id => client.id}, :class => 'action show') %> </td>
+			<td><%= link_to("Edit", {:action => 'edit', :id => client.id}, :class => 'action edit')  %> </td>
+			<td><%= link_to("Delete", {:action => 'delete', :id => client.id}, :class => 'action delete') %> </td>
+		</tr>
+
+	<%end%>
+	</table>
+</div>
+<!--</div> -->

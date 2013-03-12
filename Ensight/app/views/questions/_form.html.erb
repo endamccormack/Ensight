@@ -1,0 +1,25 @@
+
+<table summary="Questions form field">
+	<tr>
+		<td>Question description</td>
+		<td><%= f.text_field(:questionDescription) %></td>
+	</tr>
+
+	<tr>
+		<td>Test source</td>
+		<td><%= select_tag 'testSource_id', options_for_select(TestSource.joins('INNER JOIN InspectionPoints ON
+											TestSources.inspectionPoint_id = InspectionPoints.id
+											INNER JOIN ClientSites ON
+											InspectionPoints.clientSite_id = ClientSites.id
+											INNER JOIN Clients ON
+											ClientSites.client_id = Clients.id').where(['Clients.id = ?', session[:id]]).collect{ |c| [c.testSourceLocationDescription, c.id] }) %></td>
+	</tr>
+	<%= f.hidden_field(:testSource_id) %>
+
+
+
+	<script type="text/javascript" src='/js/setSelected.js'></script>
+	<script type="text/javascript">
+		setSelected('testSource_id', 'question_testSource_id');
+	</script>
+</table>

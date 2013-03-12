@@ -1,0 +1,24 @@
+<div class="ClientSiteNew">
+	<link rel="stylesheet" type="text/css" href="/css/form.css" /> 
+	<script type="text/javascript" src="/js/GoogleMapsGetPosition.js"></script>
+	<%= link_to('< Back', {:action => 'list'}, :class => 'formBackLink') %><br/>
+	<div class="module">
+		<div class="moduleHeader">Create new client site</div>
+		<p class="errors"><%= @clientSite.errors.full_messages.join(', ') %></p>
+	<%= form_for(:clientSite, :url => {:action => 'create'}) do |f| %>
+
+		<%= render(:partial => "form", :locals => {:f => f}) %>
+
+		<div id="map_canvas" style="width:90%; height: 300px; margin: 5%;" ></div>
+
+		<%= submit_tag("Create Client Site", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+
+	<% end %>
+
+</div>
+	<script type="text/javascript">
+		loadScript('clientSite_clientSiteLocationLatitude','clientSite_clientSiteLocationLongtitude');
+	</script>
+
+
+</div>

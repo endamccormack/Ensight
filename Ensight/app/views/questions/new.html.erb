@@ -1,0 +1,19 @@
+<div class="QuestionNew">
+	<%= link_to('< Back', {:action => 'list'}, :class => 'formBackLink') %>
+	<link rel="stylesheet" type="text/css" href="/css/form.css" /> 
+
+	<div class="module">
+		<div class="moduleHeader">Create a new question</div>
+		<p class="errors"><%= @question.errors.full_messages.join(', ') %></p>
+	<%= form_for(:question, :url => {:action => 'create'}) do |f| %>
+
+		<%= render(:partial => "form", :locals => {:f => f}) %>
+
+
+		<%= submit_tag("Create question", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+
+	<% end %>
+	</div>
+
+
+</div>

@@ -1,0 +1,26 @@
+<% if session[:isAdmin] == true %>
+	
+<div class="ClientNew">
+	<%= link_to('< Back', {:action => 'list'}, :class => 'formBackLink') %><br/>
+	<link rel="stylesheet" type="text/css" href="/css/form.css" /> 
+
+	<div class="module">
+		<div class="moduleHeader">Create new client</div>
+		<p class="errors"><%= @client.errors.full_messages.join(', ') %></p>
+	<%= form_tag(:action => 'create') do |f| %>
+
+		<%= render(:partial => "form", :locals => {:f => f}) %>
+		<% if session[:isAdmin] == true %>
+			<tr>
+				<td>Is admin</td>
+				<td><%= text_field_tag :isAdmin, nil, :class => 'text ui-widget-content ui-corner-all loginValues', :id=>'isAdmin', :value => @client.isAdmin %></td>
+			</tr>
+		<%end%>
+		</table>
+		<%= submit_tag("Create Client", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+
+	<% end %>
+
+	</div>
+</div>
+<%end%>

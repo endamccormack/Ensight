@@ -1,0 +1,19 @@
+<div class="testSourceDelete">
+
+	<%= link_to('< Back', {:action => 'list'}, :class => 'formBackLink') %><br/>
+	<link rel="stylesheet" type="text/css" href="/css/form.css" /> 
+
+	<div class="module">
+		<div class="moduleHeader">Delete a test source</div>
+	<%= form_for(:testSource, :url => {:action => 'destroy', :id => @testSource.id}) do |f| %>
+
+		<%= render(:partial => "form", :locals => {:f => f}) %>
+
+
+		<%= submit_tag("Confirm delete test source", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+
+	<% end %>
+	</div>
+
+
+</div>

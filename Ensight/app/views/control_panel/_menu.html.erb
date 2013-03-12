@@ -1,0 +1,12 @@
+<link rel="stylesheet" type="text/css" href="/css/ControlPanel.css" /> 
+
+<div class="module" id="ControlPanelMenu">
+	<h3>Control Panel</h3>
+<span><%= link_to("Clients", {:controller => "Clients", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"clientsButton") %></span><br/>
+<span><%= link_to("Client Sites", {:controller => "ClientSites", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"clientSitesButton") %><span><br/>
+<span><%= link_to("Inspection Points", {:controller => "InspectionPoints", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"inspectionPointsButton") %><span><br/>
+<span><%= link_to("Test Sources", {:controller => "TestSources", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"testSourcesButton") %></span><br/>
+<span><%= link_to("Parameters", {:controller => "Parameters", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"parametersButton") %></span><br/>
+<span><%= link_to("Contacts", {:controller => "Contacts", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"contactsButton") %></span><br/>
+<span><%= link_to("Checklist Questions", {:controller => "Questions", :action => "list"}, :class => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover", :id =>"QuestionsButton") %></span>
+</div>

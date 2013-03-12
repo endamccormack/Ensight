@@ -1,0 +1,43 @@
+
+				
+	<div class="module" id="map">
+		<div class="moduleHeader">Map View</div>
+		<div class="moduleBody">
+			<%= session[:clientname]%>
+			<%= session[:id]  %>
+			<%= session[:isAdmin].to_s  %>
+		</div>
+	</div>
+	
+	<table style="float:left;">
+		<tr>
+			<td>
+				<div class="module" id="status">
+					<div class="moduleHeader" >Status</div>
+					<div class="moduleBody">
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="module" id="graph" >
+					<div class="moduleHeader" id="livefeed">Compliance Trend/Live feed</div>
+					<div class="moduleBody">
+						
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="module" id="historic">
+		<div class="moduleHeader" >Other</div>
+		<div class="moduleBody">
+			
+		</div>
+	</div>
+	<div style="clear: both;" ></div>
+
+<script type="text/javascript" src="js/d3.v2.js"></script> 
+<script type="text/javascript" src="js/BasicGraph.js"></script> 
