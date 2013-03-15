@@ -122,4 +122,99 @@ class JsonRequestController < ApplicationController
 				
 	end
 
+	def findHistoricData
+
+		historicData = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType
+														FROM TestSourceSampleData 
+														INNER JOIN TestSources on
+														TestSourceSampleData.testSource_id = TestSources.id
+														inner join Parameters on
+														TestSources.parameter_id = Parameters.id
+														GROUP BY dateTimeTaken")
+		new_array = Array.new
+
+		historicData.each do |x|
+		 	new_array << {:dateTimeTaken => x.dateTimeTaken.strftime("%G-%m-%d %OH:%M:%OS")	, :reading => x.reading,:parameterType => x.parameterType}
+		end
+		#{"dateTimeTaken":"2013-01-01 14:05:14","reading":"0.90000","parameterType":"Flouride"},
+		
+		json = ActiveSupport::JSON.encode(new_array)
+
+		render :json => json
+
+	end
+
+	def findGetMonth
+		#SELECT DISTINCT MONTHNAME(dateTimeTaken) as dateTimeTaken FROM TestSourceSampleData
+		months = TestSourceSampleData.all.map{ |d| d.dateTimeTaken.strftime('%B') }.uniq
+		#MyModel.all.map { |d| d.my_date_field.strftime('%b %y') }.uniq
+		#parameters = find_by_sql("SELECT DISTINCT MONTHNAME(dateTimeTaken) as dateTimeTaken FROM TestSourceSampleData")
+		
+		#months.each_with_index {|e,i| hash_array[i]["date"] = e}
+		new_array = Array.new
+
+		months.each do |x|
+		 	new_array << {:dateTimeTaken => x}
+		end
+		
+
+		json = ActiveSupport::JSON.encode(new_array)
+
+		render :json => json
+
+	end
+
+	def findGetParameter
+		#SELECT parameterType FROM Parameters
+
+		parameters = Parameter.select(:parameterType)
+		#parameters = find_by_sql("parameterType FROM Parameters")
+
+		json = ActiveSupport::JSON.encode(parameters)
+
+		render :json => json
+
+	end
+	def findGetTestSources
+		#SELECT parameterType FROM Parameters
+
+		data = TestSourceSampleData.find_by_sql("SELECT testSource_id, inspectionPoint_id, testSourceLocationDescription, 
+								dateTimeTaken, dateTimeReceived, reading, parameterType, 
+								testSourceLowerLimit, testSourceUpperLimit, 
+								testSourceLocationLongtitude, testSourceLocationLatitude 
+								FROM TestSourceSampleData AS tssd INNER JOIN TestSources
+								ON tssd.testSource_id = TestSources.id
+								INNER JOIN Parameters
+								ON TestSources.parameter_id = Parameters.id
+								WHERE dateTimeTaken = (SELECT Max(dateTimeTaken) FROM TestSourceSampleData
+								WHERE testSource_id = tssd.testSource_id)")
+		#parameters = find_by_sql("parameterType FROM Parameters")
+
+		json = ActiveSupport::JSON.encode(data)
+
+		render :json => json
+
+	end
+
+	def findGetLiveData
+		#SELECT parameterType FROM Parameters
+
+		data = TestSourceSampleData.find_by_sql("SELECT *
+												FROM TestSourceSampleData 
+												INNER JOIN TestSources on
+												TestSourceSampleData.testSource_id = TestSources.id
+												inner join Parameters on
+												TestSources.parameter_id = Parameters.id  
+												where DATE(dateTimeTaken) = CURDATE()
+												AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute) 
+												GROUP BY dateTimeTaken")
+		#parameters = find_by_sql("parameterType FROM Parameters")
+
+		json = ActiveSupport::JSON.encode(data)
+
+		render :json => json
+
+	end
+
+	
 end

@@ -85,16 +85,8 @@ class WebServiceController < ApplicationController
 		render :json => json
 	end
 
-
-
-
-
-
-
 	#post data
 	def postData
 		theDb = Client.authenticate(params[:username], params[:password]) 
-
-		
 	end
 end
