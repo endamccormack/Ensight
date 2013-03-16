@@ -1,0 +1,56 @@
+<link rel="stylesheet" type="text/css" href="/css/ControlPanelItem.css">
+<link rel="stylesheet" type="text/css" href="/css/table.css" /> 
+
+<div id="testSourcesMenu" class="menuPane" >
+	<%= render(:partial => "control_panel/menu") %>
+</div>
+<div id="infoPane">
+	<%= link_to("Add a new test source", {:action => 'new'}, :class => 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover', :id => 'addItem') %><br/><br/>
+
+		<input type="hidden" value="<%= params[:theClientSite_id] %>" id="theClientSite_id"></input>
+		<input type="hidden" value="<%= params[:theInspectionPoint_id] %>" id="theInspectionPoint_id"></input>
+		<table id='filters'>
+			<tr>
+				<td>
+					<%= form_tag({:action => 'list'}) do %>
+
+						<%= select_tag 'clientSite_id', options_for_select(ClientSite.where(['client_id = ?', session[:id]]).collect{ |c| [c.clientSiteName, c.id ] }), {:include_blank => true, :class => 'text ui-widget-content ui-corner-all'} %>
+						
+						<%= submit_tag("Filter Client Sites", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+					<% end %>
+				</td>
+
+				<td>
+					<%= form_tag({:action => 'list'}) do %>
+						<%= select_tag 'inspectionPoint_id', options_for_select(InspectionPoint.joins('INNER JOIN ClientSites ON InspectionPoints.clientSite_id = ClientSites.id').where(['client_id = ?', session[:id]]).collect{ |c| [c.inspectionPointDescription, c.id] }), {:include_blank => true, :class => 'text ui-widget-content ui-corner-all'} %>
+
+						<%= submit_tag("Filter Inspection Points", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>	
+					<% end %>
+				</td>
+			</tr>
+		</table>
+		<script type="text/javascript" src='/js/setSelected.js'></script>
+		<script type="text/javascript">
+			setSelected('clientSite_id', 'theClientSite_id');
+			setSelected('inspectionPoint_id', 'theInspectionPoint_id');
+		</script>
+		
+	<table>
+		<tr>
+			<th>Test Source location id</th>
+			<th>Test Source location Name</th>
+			<th>View test source details</th>
+			<th>Edit test source details</th>
+			<th>Delete test source</th>
+		</tr>
+	<% @testSources.each do |testSource| %>
+		<tr>
+			<td><%= testSource.id %> </td>
+			<td><%= testSource.testSourceLocationDescription %> </td>
+			<td><%= link_to("Show", {:action => 'show', :id => testSource.id}, :class => 'action show') %></td> 
+			<td><%= link_to("Edit", {:action => 'edit', :id => testSource.id}, :class => 'action edit')  %> </td>
+			<td><%= link_to("Delete", {:action => 'delete', :id => testSource.id}, :class => 'action delete') %></td>
+		</tr>
+	<%end%>
+	</table>
+</div>

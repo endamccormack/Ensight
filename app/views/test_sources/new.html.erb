@@ -1,0 +1,24 @@
+<div class="testSourceNew">
+	<script type="text/javascript" src="/js/GoogleMapsGetPosition.js"></script>
+	<%= link_to('< Back', {:action => 'list'}, :class => 'formBackLink') %><br/>
+<link rel="stylesheet" type="text/css" href="/css/form.css" /> 
+
+	<div class="module">
+		<div class="moduleHeader">Create a new test source</div>
+		<p class="errors"><%= @testSource.errors.full_messages.join(', ') %></p>
+	<%= form_for(:testSource, :url => {:action => 'create'}) do |f| %>
+
+		<%= render(:partial => "form", :locals => {:f => f}) %>
+
+		<div id="map_canvas" style="width:90%; height: 300px; margin: 5%;" ></div>
+
+		<%= submit_tag("Create test source", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+
+	<% end %>
+	</div>
+	<script type="text/javascript">
+		loadScript('testSource_testSourceLocationLatitude','testSource_testSourceLocationLongtitude');
+	</script>
+
+
+</div>

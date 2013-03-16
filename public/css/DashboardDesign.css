@@ -1,0 +1,116 @@
+aside, footer, header, section, nav {
+	display: block;
+}
+/*body {
+	background-image:url(Images/darkaurora.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	background-color:#0b0b0b;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+}*/
+header img {
+	width:180px;
+	height:60px;
+	margin-left:40px;
+}
+#pagewrapper {
+	width:1200px;
+	height:auto;
+	margin:auto;
+}
+#contentwrapper {
+	background-color: #181818;
+	box-shadow: 5px 5px 15px #000000;
+	border-radius: 15px;
+	min-height: 500px;
+
+	width:1100px;
+	height:auto;
+	margin:auto;
+	overflow:hidden;
+	border-radius:10px;
+	padding: 20px;
+}
+.smallheader {
+	color:#9b9b9b;
+	font-size:12px;
+	font-weight:lighter;
+	text-align:center;
+	padding-top:5px;
+	padding-bottom:5px;
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	background-color:#02090c;
+}
+#map {
+	float:left;
+	margin-right:14px;
+	margin-bottom:20px;
+	
+	width:500px;
+	height:400px;
+	border-radius:10px;
+}
+#map aside {
+	float:left;
+	width:170px;
+}
+#map aside nav ul {
+	list-style:none;
+	text-align:center;
+	margin-left:10px;
+	margin-top:20px;
+	padding:0px;
+}
+#map aside nav ul li a {
+	display:block;
+	text-decoration:none;
+	margin-bottom:20px;
+	padding:10px;
+}
+#wrapper aside nav ul li a:hover {
+	color: #fff;
+}
+#status {
+	float:right;	
+	width:580px;
+	height:110px;
+	border-radius:10px;
+}
+#graph {
+	float:right;
+	margin-top:20px;
+	margin-bottom:20px;
+	width:580px;
+	height:270px;
+	border-radius:10px;
+}
+#livefeed {
+	width:580px;
+	height:270px;
+}
+svg {
+	width:580px;
+	height:270px;	
+	padding: 10px;
+}
+path {
+	stroke: #0182b6;
+	stroke-width: 1;
+	fill: none;
+}
+line {
+	stroke:#9b9b9b;
+}
+text {
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:12px;
+	fill:#9b9b9b;
+}
+#historic {
+	width:1100px;
+	height:200px;
+	border-radius:10px;
+	clear:both;
+	overflow:hidden;
+}

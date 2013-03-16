@@ -1,0 +1,118 @@
+
+<link href="/css/Dashboard.css" rel="stylesheet" type="text/css">
+<!--<section id="pagewrapper">
+<header><img src="Images/logo.png" width="275" height="90" id='ensightLogo' alt="Ensight Logo"/></header>
+	
+	<section id="contentwrapper">-->
+	
+	<section id="map">
+	  <header class="smallheader">Map View</header>
+      <section id="mapContainer"></section>
+	</section>
+	   
+	<section id="status">
+	  <header class="smallheader">Status</header>
+	</section>
+	
+	<section id="livegraph">
+	  <header class="smallheader">Compliance Trend/Live Feed</header>
+	  <section id="livefeed"></section> 
+	</section>
+	
+	<section id = "historicgraph">
+	  <header class="smallheader">Historic </header>
+		 
+	  <section id="selectparameter">
+     <div class = "selectstyle">
+         <select name='parameterType' id="parameterType">
+            </select> 
+           </div>
+		</section>
+		
+		<section id="selectmonth">
+        <div class = "selectstyle">
+		<select name='dateTimeTaken' id="dateTimeTaken">
+		</select>
+	 </div>
+	  </section>
+		<section id="historic"></section> 
+	</section>
+	<!--  
+  </section> 
+  <section id="footer">DEVELOPED AND COPYRIGHT © 2012 ENSIGHT</section>
+</section> -->
+   <script type="text/javascript">
+	
+		function loadparameters(selobj, url, nameattr) {
+			$(selobj).empty();
+			$.getJSON(url, {}, function (data) {
+				<!--$(selobj).append('<option value="">Select Parameter');  -->
+				$.each(data, function (i, obj) {
+					$(selobj).append($("<option></option>").html(obj[nameattr]));
+				});
+			});
+		}
+		
+		function loadmonths(selobj, url, nameattr) {
+			$(selobj).empty();
+			$.getJSON(url, {}, function (data) {
+				<!--$(selobj).append('<option value="">Select Month');  -->
+				$.each(data, function (i, obj) {
+					$(selobj).append($("<option></option>").html(obj[nameattr]));
+				});
+			});
+		}
+
+		$(function () {
+			loadparameters($('select#parameterType').get(0), '/JsonRequest/findGetParameter', 'parameterType');
+			loadmonths($('select#dateTimeTaken').get(0), '/JsonRequest/findGetMonth', 'dateTimeTaken');
+			//loadmonths($('select#dateTimeTaken').get(0), 'GetMonth.php?GetMonth=dateTimeTaken', 'dateTimeTaken');
+		});
+		
+	</script>
+	<script type="text/javascript" src="/js/d3.v3.js"></script>
+	<!--<script type="text/javascript" src="Javascript/jquery-1.9.1.js"></script> -->
+	<script type="text/javascript" src="js/LiveGraph.js"></script>
+	<script type="text/javascript" src="js/HistoricGraph.js"></script> 
+    <script type="text/javascript" src="js/Map.js"></script> 
+	
+   
+				
+	<!--<div class="module" id="map">
+		<div class="moduleHeader">Map View</div>
+		<div class="moduleBody">
+		</div>
+	</div>
+	
+	<table style="float:left;">
+		<tr>
+			<td>
+				<div class="module" id="status">
+					<div class="moduleHeader" >Status</div>
+					<div class="moduleBody">
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="module" id="graph" >
+					<div class="moduleHeader" id="livefeed">Compliance Trend/Live feed</div>
+					<div class="moduleBody">
+						
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="module" id="historic">
+		<div class="moduleHeader" >Other</div>
+		<div class="moduleBody">
+			
+		</div>
+	</div>
+	<div style="clear: both;" ></div>
+
+<script type="text/javascript" src="js/d3.v2.js"></script> 
+<script type="text/javascript" src="js/BasicGraph.js"></script> -->

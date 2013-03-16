@@ -1,0 +1,18 @@
+<div class="ParameterNew">
+	<link rel="stylesheet" type="text/css" href="/css/form.css">
+	<%= link_to('< Back', {:action => 'list'}, :class => 'formBackLink') %><br/>
+	<div class="module">
+		<div class="moduleHeader">Create new parameter</div>
+		<p class="errors"><%= @parameter.errors.full_messages.join(', ') %></p>
+	<%= form_for(:parameter, :url => {:action => 'create'}) do |f| %>
+
+		<%= render(:partial => "form", :locals => {:f => f}) %>
+
+
+		<%= submit_tag("Create parameter", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+
+	<% end %>
+	</div>
+
+
+</div>

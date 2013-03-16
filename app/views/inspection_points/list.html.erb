@@ -1,0 +1,45 @@
+<link rel="stylesheet" type="text/css" href="/css/ControlPanelItem.css"/>
+<link rel="stylesheet" type="text/css" href="/css/table.css" /> 
+
+<div id="inspectionPointsMenu" class="menuPane">
+	<%= render(:partial => "control_panel/menu") %>
+</div>
+<div id="infoPane">
+	<%= link_to("Add a new inspection point", {:action => 'new'}, :class => 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover', :id => 'addItem') %><br/><br/>
+
+	<input type="hidden" value="<%= params[:theClientSite_id] %>" id="theClientSite_id"></input>
+	
+	<table id='filters'>
+		<tr>
+			<td>
+				<%= form_tag({:action => 'list'}) do %>
+
+					<%= select_tag 'clientSite_id', options_for_select(ClientSite.where(['client_id = ?', session[:id]]).collect{ |c| [c.clientSiteName, c.id ] }), {:include_blank => true, :class => 'text ui-widget-content ui-corner-all'} %>
+					
+					<%= submit_tag("Filter Client Sites", :class => "formButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover") %>
+				<% end %>
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript" src='/js/setSelected.js'></script>
+	<script type="text/javascript">
+		setSelected('clientSite_id', 'theClientSite_id');
+	</script>
+
+	<table>
+	<tr>
+		<th>Inspection Point Name</th>
+		<th>View Inspection Point details</th>
+		<th>Edit Inspection Point details</th>
+		<th>Delete Inspection Point</th>
+	</tr>
+	<% @inspectionPoints.each do |inspectionPoint| %>
+		<tr>
+			<td><%= inspectionPoint.inspectionPointDescription %> </td>
+			<td><%= link_to("Show", {:action => 'show', :id => inspectionPoint.id}, :class => 'action show') %> </td>
+			<td><%= link_to("Edit", {:action => 'edit', :id => inspectionPoint.id}, :class => 'action edit')  %> </td>
+			<td><%= link_to("Delete", {:action => 'delete', :id => inspectionPoint.id}, :class => 'action delete') %></td>
+		</tr>
+	<%end%>
+	</table>
+</div>

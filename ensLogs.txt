@@ -1,0 +1,101 @@
+2013-03-01T00:50:49+00:00 app[web.1]: 	from /app/config.ru:in `<main>'
+2013-03-01T00:50:49+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands.rb:55:in `block in <top (required)>'
+2013-03-01T00:50:49+00:00 app[web.1]: 	from /app/config/environment.rb:5:in `<top (required)>'
+2013-03-01T00:50:49+00:00 app[web.1]: 	from script/rails:6:in `require'
+2013-03-01T00:50:49+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands.rb:50:in `tap'
+2013-03-01T00:50:50+00:00 heroku[web.1]: Process exited with status 1
+2013-03-01T00:50:50+00:00 heroku[web.1]: State changed from starting to crashed
+2013-03-01T00:51:22+00:00 heroku[api]: Add DATABASE_URL config by endamccormack0@gmail.com
+2013-03-01T00:51:22+00:00 heroku[api]: Release v13 created by endamccormack0@gmail.com
+2013-03-01T00:51:22+00:00 heroku[web.1]: State changed from crashed to starting
+2013-03-01T00:51:24+00:00 heroku[web.1]: Starting process with command `bundle exec rails server -p 14251`
+2013-03-01T00:51:28+00:00 app[web.1]: DEPRECATION WARNING: You have Rails 2.3-style plugins in vendor/plugins! Support for these plugins will be removed in Rails 4.0. Move them out and bundle them in your Gemfile, or fold them in to your app as lib/myplugin/* and config/initializers/myplugin.rb. See the release notes for more on this: http://weblog.rubyonrails.org/2012/1/4/rails-3-2-0-rc2-has-been-released. (called from <top (required)> at /app/config/environment.rb:5)
+2013-03-01T00:51:28+00:00 app[web.1]: DEPRECATION WARNING: You have Rails 2.3-style plugins in vendor/plugins! Support for these plugins will be removed in Rails 4.0. Move them out and bundle them in your Gemfile, or fold them in to your app as lib/myplugin/* and config/initializers/myplugin.rb. See the release notes for more on this: http://weblog.rubyonrails.org/2012/1/4/rails-3-2-0-rc2-has-been-released. (called from <top (required)> at /app/config/environment.rb:5)
+2013-03-01T00:51:29+00:00 app[web.1]:         provide a secret to prevent exploits that may be possible from crafted
+2013-03-01T00:51:29+00:00 app[web.1]:         Called from: /app/vendor/bundle/ruby/1.9.1/gems/actionpack-3.2.9/lib/action_dispatch/middleware/session/abstract_store.rb:28:in `initialize'.
+2013-03-01T00:51:29+00:00 app[web.1]: 
+2013-03-01T00:51:29+00:00 app[web.1]: 
+2013-03-01T00:51:29+00:00 app[web.1]:         SECURITY WARNING: No secret option provided to Rack::Session::Cookie.
+2013-03-01T00:51:29+00:00 app[web.1]:         This poses a security threat. It is strongly recommended that you
+2013-03-01T00:51:29+00:00 app[web.1]:         cookies. This will not be supported in future versions of Rack, and
+2013-03-01T00:51:29+00:00 app[web.1]:         future versions will even invalidate your existing user cookies.
+2013-03-01T00:51:31+00:00 app[web.1]: => Booting WEBrick
+2013-03-01T00:51:31+00:00 app[web.1]: Connecting to database specified by DATABASE_URL
+2013-03-01T00:51:31+00:00 app[web.1]: => Rails 3.2.9 application starting in production on http://0.0.0.0:14251
+2013-03-01T00:51:31+00:00 app[web.1]: => Call with -d to detach
+2013-03-01T00:51:31+00:00 app[web.1]: => Ctrl-C to shutdown server
+2013-03-01T00:51:32+00:00 app[web.1]: /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_mysql_adapter.rb:245:in `query': Mysql2::Error: No database selected: SHOW TABLES LIKE 'Clients' (ActiveRecord::StatementInvalid)
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_adapter.rb:275:in `log'
+2013-03-01T00:51:32+00:00 app[web.1]: Exiting
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_mysql_adapter.rb:245:in `block in execute'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/schema_cache.rb:30:in `table_exists?'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/attribute_assignment.rb:13:in `attributes_protected_by_default'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:236:in `load_dependency'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/model_schema.rb:223:in `table_exists?'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/attribute_methods/primary_key.rb:49:in `primary_key'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:118:in `block in attr_protected'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_adapter.rb:280:in `block in log'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:188:in `default'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_mysql_adapter.rb:245:in `execute'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:251:in `require'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/engine.rb:436:in `eager_load!'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_mysql_adapter.rb:259:in `execute_and_free'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/attribute_methods/primary_key.rb:60:in `reset_primary_key'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:251:in `require'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_mysql_adapter.rb:383:in `tables'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:117:in `each'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:225:in `require_dependency'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/abstract_mysql_adapter.rb:390:in `table_exists?'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:117:in `attr_protected'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/engine.rb:439:in `block (2 levels) in eager_load!'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/attribute_methods/primary_key.rb:75:in `get_primary_key'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:216:in `block in protected_attributes_configs'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/app/models/Client.rb:27:in `<class:Client>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activerecord-3.2.9/lib/active_record/connection_adapters/mysql2_adapter.rb:211:in `execute'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:188:in `yield'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activemodel-3.2.9/lib/active_model/mass_assignment_security.rb:188:in `protected_attributes'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/app/models/Client.rb:2:in `<top (required)>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:359:in `require_or_load'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/engine.rb:436:in `each'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/initializable.rb:54:in `run_initializers'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/builder.rb:40:in `eval'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:251:in `block in require'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/application.rb:136:in `initialize!'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/config.ru:in `<main>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/application/finisher.rb:53:in `block in <module:Finisher>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/railtie/configurable.rb:30:in `method_missing'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/config.ru:in `new'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/initializable.rb:30:in `instance_exec'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands.rb:50:in `<top (required)>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/activesupport-3.2.9/lib/active_support/dependencies.rb:313:in `depend_on'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/config/environment.rb:5:in `<top (required)>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands/server.rb:70:in `start'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/initializable.rb:30:in `run'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/config.ru:3:in `require'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/server.rb:304:in `wrapped_app'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/initializable.rb:54:in `each'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/config.ru:3:in `block in <main>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/server.rb:254:in `start'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/engine.rb:438:in `block in eager_load!'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/builder.rb:51:in `instance_eval'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/builder.rb:40:in `parse_file'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/initializable.rb:55:in `block in run_initializers'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/builder.rb:51:in `initialize'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/rack-1.4.5/lib/rack/server.rb:200:in `app'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/engine.rb:438:in `each'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands/server.rb:46:in `app'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands.rb:50:in `tap'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from script/rails:6:in `<main>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from /app/vendor/bundle/ruby/1.9.1/gems/railties-3.2.9/lib/rails/commands.rb:55:in `block in <top (required)>'
+2013-03-01T00:51:32+00:00 app[web.1]: 	from script/rails:6:in `require'
+2013-03-01T00:51:34+00:00 heroku[web.1]: Process exited with status 1
+2013-03-01T00:51:34+00:00 heroku[web.1]: State changed from starting to crashed
+2013-03-01T00:51:36+00:00 heroku[api]: Starting process with command `bundle install` by endamccormack0@gmail.com
+2013-03-01T00:51:39+00:00 heroku[run.9177]: Starting process with command `bundle install`
+2013-03-01T00:51:39+00:00 heroku[run.9177]: Awaiting client
+2013-03-01T00:51:40+00:00 heroku[run.9177]: Client connection closed. Sending SIGHUP to all processes
+2013-03-01T00:51:41+00:00 heroku[run.9177]: State changed from up to complete
+2013-03-01T00:51:41+00:00 heroku[run.9177]: Process exited with status 0
+2013-03-01T00:52:16+00:00 heroku[router]: at=error code=H10 desc="App crashed" method=GET path=/ host=young-retreat-8009.herokuapp.com fwd="89.100.62.35" dyno= queue= wait= connect= service= status=503 bytes=
+2013-03-01T00:52:17+00:00 heroku[router]: at=error code=H10 desc="App crashed" method=GET path=/favicon.ico host=young-retreat-8009.herokuapp.com fwd="89.100.62.35" dyno= queue= wait= connect= service= status=503 bytes=

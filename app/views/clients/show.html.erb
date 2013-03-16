@@ -1,0 +1,16 @@
+<link rel="stylesheet" type="text/css" href="/css/table.css">
+<link rel="stylesheet" type="text/css" href="/css/form.css">
+<%= link_to('< Back', {:action => "list"}) %><br/>
+	<div class="module">
+		<div class="moduleHeader">Viewing a client</div>
+		<table>
+			<tr>
+				<td>Client Name</td>
+				<td><%= @client.clientName %> </td>
+			</tr>
+			<tr>
+				<td>Client Address</td>
+				<td><%= @client.clientAddress %> </td>
+			</tr>
+		</table>
+	</div>

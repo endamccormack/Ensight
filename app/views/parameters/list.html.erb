@@ -1,0 +1,26 @@
+<link rel="stylesheet" type="text/css" href="/css/ControlPanelItem.css"/>
+<link rel="stylesheet" type="text/css" href="/css/table.css" /> 
+
+<div id="parametersMenu" class="menuPane">
+	<%= render(:partial => "control_panel/menu") %>
+</div>
+<div id="infoPane">
+	<%= link_to("Add a new parameter", {:action => 'new'}, :class => 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover', :id => 'addItem') %>
+	<table>
+	<tr>
+		<th>Parameter Name</th>
+		<th>View Parameter details</th>
+		<th>Edit Parameter details</th>
+		<th>Delete Parameter</th>
+	</tr>
+	<% @parameters.each do |parameter| %>
+		<tr>
+			<td><%= parameter.parameterType %> </td>
+			<td><%= link_to("Show", {:action => 'show', :id => parameter.id}, :class => 'action show') %> </td>
+			<td><%= link_to("Edit", {:action => 'edit', :id => parameter.id}, :class => 'action edit')  %> </td> 
+			<td><%= link_to("Delete", {:action => 'delete', :id => parameter.id}, :class => 'action delete') %> </td>
+		</tr>
+	
+	<%end%>
+	</table>
+</div>
