@@ -20,21 +20,39 @@
 	</section>
 	
 	<section id = "historicgraph">
-	  <header class="smallheader">Historic </header>
+  		<header class="smallheader">Historic </header>
 		 
-	  <section id="selectparameter">
-     <div class = "selectstyle">
-         <select name='parameterType' id="parameterType">
-            </select> 
-           </div>
+  		<section id="selectparameter">
+     		<div class = "selectstyle">
+     			<!--<select name='parameterType' id="parameterType"> -->
+     				<%= select_tag 'parameterType', options_for_select(Parameter.joins("INNER JOIN TestSources ON
+											Parameters.id = TestSources.parameter_id
+											INNER JOIN InspectionPoints ON
+											TestSources.inspectionPoint_id = InspectionPoints.id
+											INNER JOIN ClientSites ON
+											InspectionPoints.clientSite_id = ClientSites.id
+											INNER JOIN Clients ON
+											ClientSites.client_id = Clients.id").where(['ClientSites.client_id = ?', session[:id]]).uniq.collect{ |p| [p.parameterType, p.parameterType ] }), {:include_blank => false, :class => 'text ui-widget-content ui-corner-all'} %>
+    			<!--</select> -->
+       		</div>
 		</section>
 		
 		<section id="selectmonth">
-        <div class = "selectstyle">
-		<select name='dateTimeTaken' id="dateTimeTaken">
-		</select>
-	 </div>
-	  </section>
+
+        	<div class = "selectstyle">
+        		<%= select_tag 'dateTimeTaken', options_for_select(TestSourceSampleData.joins("
+							        			INNER JOIN TestSources ON
+												TestSourceSampleData.TestSource_id = TestSources.id
+												INNER JOIN InspectionPoints ON
+												TestSources.inspectionPoint_id = InspectionPoints.id
+												INNER JOIN ClientSites ON
+												InspectionPoints.clientSite_id = ClientSites.id
+												INNER JOIN Clients ON
+												ClientSites.client_id = Clients.id").where(['ClientSites.client_id = ?', session[:id]]).map{ |d| [ d.dateTimeTaken.strftime('%B')] }.uniq), {:include_blank => false, :class => 'text ui-widget-content ui-corner-all'} %>
+															
+	 		</div>
+
+	  	</section>
 		<section id="historic"></section> 
 	</section>
 	<!--  
@@ -43,31 +61,31 @@
 </section> -->
    <script type="text/javascript">
 	
-		function loadparameters(selobj, url, nameattr) {
-			$(selobj).empty();
-			$.getJSON(url, {}, function (data) {
-				<!--$(selobj).append('<option value="">Select Parameter');  -->
-				$.each(data, function (i, obj) {
-					$(selobj).append($("<option></option>").html(obj[nameattr]));
-				});
-			});
-		}
+		//function loadparameters(selobj, url, nameattr) {
+		//	$(selobj).empty();
+		//	$.getJSON(url, {}, function (data) {
+		//		<!--$(selobj).append('<option value="">Select Parameter');  -->
+		//		$.each(data, function (i, obj) {
+		//			$(selobj).append($("<option></option>").html(obj[nameattr]));
+		//		});
+		//	});
+		//}
 		
-		function loadmonths(selobj, url, nameattr) {
-			$(selobj).empty();
-			$.getJSON(url, {}, function (data) {
-				<!--$(selobj).append('<option value="">Select Month');  -->
-				$.each(data, function (i, obj) {
-					$(selobj).append($("<option></option>").html(obj[nameattr]));
-				});
-			});
-		}
+		//function loadmonths(selobj, url, nameattr) {
+		//	$(selobj).empty();
+		//	$.getJSON(url, {}, function (data) {
+		//		<!--$(selobj).append('<option value="">Select Month');  -->
+		//		$.each(data, function (i, obj) {
+		//			$(selobj).append($("<option></option>").html(obj[nameattr]));
+		//		});
+		//	});
+		//}
 
-		$(function () {
-			loadparameters($('select#parameterType').get(0), '/JsonRequest/findGetParameter', 'parameterType');
-			loadmonths($('select#dateTimeTaken').get(0), '/JsonRequest/findGetMonth', 'dateTimeTaken');
-			//loadmonths($('select#dateTimeTaken').get(0), 'GetMonth.php?GetMonth=dateTimeTaken', 'dateTimeTaken');
-		});
+		//$(function () {
+		//	loadparameters($('select#parameterType').get(0), '/JsonRequest/findGetParameter', 'parameterType');
+		//	loadmonths($('select#dateTimeTaken').get(0), '/JsonRequest/findGetMonth', 'dateTimeTaken');
+		//	//loadmonths($('select#dateTimeTaken').get(0), 'GetMonth.php?GetMonth=dateTimeTaken', 'dateTimeTaken');
+		//}); 
 		
 	</script>
 	<script type="text/javascript" src="/js/d3.v3.js"></script>
