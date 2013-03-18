@@ -1,15 +1,17 @@
-	
+function Historic(i)
+{	
 var margin = {top: 25, right: 20, bottom: 35, left: 30},
     width = 440,
-    height = 270;
+    height = 275;
 		
 var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
-Date.prototype.getMonthName = function() {
-          var monthNames = [ "January", "February", "March", "April", "May", "June", 
-                        "July", "August", "September", "October", "November", "December" ];
-          return monthNames[this.getMonth()];
-     }		
+
+Date.prototype.getMonthName = function() 
+{
+var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+	return monthNames[this.getMonth()];
+}
 
 var formatTime = d3.time.format("%H:%M:%S");
 
@@ -50,24 +52,45 @@ function make_y_axis() {return d3.svg.axis()
 	.orient("left")
 	.ticks(9)}
 				
-d3.json("/JsonRequest/findHistoricData", function(error,data) { 
-  	data.forEach(function(d) {
+d3.json("/JsonRequest/findHistoricData", function(error,data) 
+{
+var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == i;})	
+	filtered_data.forEach(function(d) {
     	d.dateTimeTaken = parseDate(d.dateTimeTaken);
     	d.reading = +d.reading;
-		d.testSourceUpperLimit = +d.testSourceUpperLimit;
-		d.testSourceLowerLimit = +d.testSourceLowerLimit;
-		d.parameterType = d.parameterType;});
-		 					
-var selectedParameter = document.getElementById("parameterType").value;		
+		d.parameterType = d.parameterType;
+		d.inspectionPoint_id = d.inspectionPoint_id;		
+});
+
+			
+d3.select("#selectparameter")
+    .append("select")
+	.attr("id", "parameterType")
+    .selectAll("option")
+    .data(filtered_data)
+    .enter().append("option")
+    .text(function(d) { return d.parameterType; })
+		
+		
+d3.select("#selectmonth")
+		.append("select")
+		.attr("id", "dateTimeTaken")
+      	.selectAll("option")
+        .data(filtered_data)
+      	.enter().append("option")
+        .text(function(d) { return d.dateTimeTaken.getMonthName(); })		
+
+
+var selectedParameter = document.getElementById("parameterType").value; 
 var selectedMonth = document.getElementById("dateTimeTaken").value;
 	
-	//filter data by selected parameter and month	
-	var selectedData = data.filter(function(d) { 
-			
-			return d.parameterType == selectedParameter  &&
-			d.dateTimeTaken.getMonthName() == selectedMonth;
-		});
-	
+//filter data by selected parameter and month	
+var selectedData = filtered_data.filter(function(d) 
+{ 
+	return d.parameterType == selectedParameter && d.dateTimeTaken.getMonthName() == selectedMonth;
+});
+				
+//get average reading for each day within selected month
 var newdata = d3.nest()    	
 	.key(function(d) { return d3.time.day(d.dateTimeTaken).toISOString(); })
 	.sortKeys(d3.ascending)	
@@ -133,7 +156,7 @@ svg.selectAll("dot")
 	 div.transition()
 	.duration(200)
 	.style("opacity", .9);	  
-	 div .html("Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" + "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
+	div .html("Inspection Point:"  + "  " + i + "<br/>" + "<br/>" +"Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" 	+ "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
 	.style("left", (d3.event.pageX) + "px")
 	.style("top", (d3.event.pageY - 28) + "px");
 	})
@@ -152,13 +175,13 @@ function upDate()
 var selectedParameter = document.getElementById("parameterType").value;		
 var selectedMonth = document.getElementById("dateTimeTaken").value;
 	
-	//filter data by selected parameter and month	
-	var selectedData = data.filter(function(d) { 
-			
-			return d.parameterType == selectedParameter  &&
-			d.dateTimeTaken.getMonthName() == selectedMonth;
-		});
-	
+//filter data by selected parameter and month	
+var selectedData = filtered_data.filter(function(d) 
+{ 			
+	return d.parameterType == selectedParameter && d.dateTimeTaken.getMonthName() == selectedMonth;
+});
+		
+//get average reading for each day within selected month	
 var newdata = d3.nest()    	
 	.key(function(d) { return d3.time.day(d.dateTimeTaken).toISOString(); })
 	.sortKeys(d3.ascending)	
@@ -192,14 +215,13 @@ svg.selectAll("g.grid")
 	.duration(750)
 	.call(make_x_axis)
 	.call(make_y_axis)	
-
 				
 var circle = svg.selectAll("circle")
     .data(newdata);
 
 circle.enter().append("circle")
-.transition()
-.duration(750)
+	.transition()
+	.duration(750)
     .attr("r", 4)
 	.attr("fill", "#8cc13f")
 
@@ -210,7 +232,7 @@ circle
 	 div.transition()
 	.duration(200)
 	.style("opacity", .9);	  
-	 div .html("Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" + "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
+	div .html("Inspection Point:"  + "  " + i + "<br/>" + "<br/>" +"Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" + "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
 	.style("left", (d3.event.pageX) + "px")
 	.style("top", (d3.event.pageY - 28) + "px");
 	})
@@ -221,15 +243,13 @@ circle
 		});
 
 circle.exit()
-.transition()
-.duration(750)
-   		.attr('opacity',0)
-		.remove();
-	
-		
+	.transition()
+	.duration(750)
+   	.attr('opacity',0)
+	.remove();		
 };		
 });
-
+}
 
 
 

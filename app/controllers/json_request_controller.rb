@@ -122,25 +122,51 @@ class JsonRequestController < ApplicationController
 				
 	end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	def findHistoricData
 
-		historicData = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType
-														FROM TestSourceSampleData 
-														INNER JOIN TestSources on
-														TestSourceSampleData.testSource_id = TestSources.id
-														inner join Parameters on
-														TestSources.parameter_id = Parameters.id
-														GROUP BY dateTimeTaken")
+		historicData = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType, inspectionPoint_id
+															FROM TestSourceSampleData 
+															INNER JOIN TestSources on
+															TestSourceSampleData.testSource_id = TestSources.id
+															inner join Parameters on
+															TestSources.parameter_id = Parameters.id
+															GROUP BY dateTimeTaken")
 		new_array = Array.new
 
 		historicData.each do |x|
-		 	new_array << {:dateTimeTaken => x.dateTimeTaken.strftime("%G-%m-%d %OH:%M:%OS")	, :reading => x.reading,:parameterType => x.parameterType}
+		 	new_array << {:dateTimeTaken => x.dateTimeTaken.strftime("%G-%m-%d %OH:%M:%OS")	, :reading => x.reading,:parameterType => x.parameterType, :inspectionPoint_id => x.inspectionPoint_id}
 		end
 		#{"dateTimeTaken":"2013-01-01 14:05:14","reading":"0.90000","parameterType":"Flouride"},
 		
-		json = ActiveSupport::JSON.encode(new_array)
+		#json = ActiveSupport::JSON.encode(new_array)
 
-		render :json => json
+		#render :json => new_array
+		render json: Oj.dump(new_array, mode: :compat)
 
 	end
 
@@ -196,18 +222,12 @@ class JsonRequestController < ApplicationController
 
 	end
 
-	def findGetLiveData
+	def findGetInspectionPoints
 		#SELECT parameterType FROM Parameters
 
-		data = TestSourceSampleData.find_by_sql("SELECT *
-												FROM TestSourceSampleData 
-												INNER JOIN TestSources on
-												TestSourceSampleData.testSource_id = TestSources.id
-												inner join Parameters on
-												TestSources.parameter_id = Parameters.id  
-												where DATE(dateTimeTaken) = CURDATE()
-												AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute) 
-												GROUP BY dateTimeTaken")
+		data = InspectionPoint.find_by_sql("SELECT id, inspectionPointDescription, clientSite_id, 
+												inspectionPointLocationLatitude, inspectionPointLocationLongtitude
+												FROM GroupEnsightDev.InspectionPoints")
 		#parameters = find_by_sql("parameterType FROM Parameters")
 
 		json = ActiveSupport::JSON.encode(data)
@@ -216,5 +236,34 @@ class JsonRequestController < ApplicationController
 
 	end
 
-	
+	def findGetLiveData
+		#SELECT parameterType FROM Parameters
+
+		data = TestSourceSampleData.find_by_sql("SELECT *
+												FROM TestSourceSampleData
+												INNER JOIN TestSources on
+												TestSourceSampleData.testSource_id = TestSources.id
+												inner join Parameters on 
+												TestSources.parameter_id = Parameters.id 
+												where DATE(dateTimeTaken) = CURDATE()
+												AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute)")
+		#parameters = find_by_sql("parameterType FROM Parameters")
+
+		json = ActiveSupport::JSON.encode(data)
+
+		render :json => json
+
+	end
+
+	def findGetClientSites
+
+		data = TestSourceSampleData.find_by_sql("SELECT id, client_id, clientSiteName, clientSiteAddress, 
+												clientSiteLocationLatitude, clientSiteLocationLongtitude
+												FROM ClientSites")
+
+		json = ActiveSupport::JSON.encode(data)
+
+		render :json => json
+
+	end
 end

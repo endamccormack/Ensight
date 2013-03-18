@@ -79,10 +79,23 @@ class WebServiceController < ApplicationController
 									ON InspectionPoints.clientSite_id = ClientSites.id").where(
 									["ClientSites.client_id = ?", theDb.id ])
 
-
 		json = ActiveSupport::JSON.encode(theData)
 			
 		render :json => json
+	end
+
+	def authenticate
+		authorizedClient = Client.authenticate(params[:username], params[:password]) 
+
+		if authorizedClient
+			json = ActiveSupport::JSON.encode(true)
+			render :json => json
+			return true
+		else
+			json = ActiveSupport::JSON.encode(false)
+			render :json => json
+			return false
+		end
 	end
 
 	#post data

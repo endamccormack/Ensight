@@ -1,13 +1,13 @@
-
-	
+function Live(i)
+{	
 var margin = {
-top: 35,
+top: 65,
 right: 80,
 bottom: 40,
 left: 40},
 
 width = 580 - margin.left - margin.right,
-height = 470 - margin.top - margin.bottom;
+height = 570 - margin.top - margin.bottom;
 	
 var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;	
 	
@@ -19,13 +19,12 @@ var x = d3.time.scale()
 var y = d3.scale.linear()
 		.range([height, 0]);
 	
-var color = d3.scale.category20();
+var color = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
     	.scale(x)
     	.orient("bottom")
-		.tickSize(-height)
-		.tickSubdivide(1);
+		.tickSize(-height);
 
 var yAxis = d3.svg.axis()
     	.scale(y)
@@ -48,30 +47,44 @@ svg.append("defs").append("clipPath")
     	.attr("width", width)
     	.attr("height", height);
 		
-d3.json("/JsonRequest/findGetLiveData", function(error, data) 
-{
- 		color.domain(d3.keys(data[0]).filter(function(key) { return key == "parameter_id"; }));
- 		data = data.map( function (d) { 
-    	d.dateTimeTaken = parseDate(d.dateTimeTaken);
-		d.reading = +d.reading;
-		return d;
+d3.json("LiveData.php", function(error, data) 
+{ 
+	var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == i;})	
+			
+	color.domain(d3.keys(filtered_data[0]).filter(function(key) { return key == "testSource_id"; }));
+	
+	filtered_data.map( function (d) {
+	d.inspectionPoint_id = +d.inspectionPoint_id;
+	d.testSource_id = +d.testSource_id;
+	d.testSourceUpperLimit = +d.testSourceUpperLimit; 
+	d.dateTimeTaken = parseDate(d.dateTimeTaken);
+	d.reading = +d.reading;
+	d.parameterType = d.parameterType;
+	d.parameter_id = +d.parameter_id;
+	d.clientSite_id = +d.clientSite_id;
+	d.clientSiteName = d.clientSiteName;
+	return d;
  });
-    
-data = d3.nest().key(function(d) { return d.parameter_id; }).entries(data);
+  
+filtered_data = d3.nest().key(function(d) { return d.testSource_id; }).entries(filtered_data);
 
-
-x.domain([d3.min(data, function(d) { return d3.min(d.values, function (d) { return d.dateTimeTaken; }); }),
-          d3.max(data, function(d) { return d3.max(d.values, function (d) { return d.dateTimeTaken; }); })]);
-y.domain([d3.min(data, function(d) { return d3.min(d.values, function (d) { return d.reading; }); }),
-          d3.max(data, function(d) { return d3.max(d.values, function (d) { return d.reading; }); })]);	
+x.domain([d3.min(filtered_data, function(d) { return d3.min(d.values, function (d) { return d.dateTimeTaken; }); }),
+          d3.max(filtered_data, function(d) { return d3.max(d.values, function (d) { return d.dateTimeTaken; }); })]);
+y.domain([d3.min(filtered_data, function(d) { return d3.min(d.values, function (d) { return d.reading; }); }),
+          d3.max(filtered_data, function(d) { return d3.max(d.values, function (d) { return d.reading; }); })]);	
 		  
 var status = d3.select("#status")
 		.append("svg")
-		.attr("width", 580)
-		.attr("height", 250);		  
-		  
+		.attr('class', 'status')
+		.attr("width", 50)
+		.attr("height", 140);
+		
+var div = d3.select("#status")
+	.append("div")
+	.attr("class", "statustext");
+	 						  		  
 var legend = svg.selectAll('g')
-		.data(data, function(d) { return d.key; })
+		.data(filtered_data, function(d) { return d.key; })
      	.enter()
      	.append('g')
      	.attr('class', 'legend')
@@ -101,7 +114,7 @@ svg.append("g")
 		.call(yAxis);
 			        
 var parameter = svg.selectAll(".parameter")
-		.data(data, function(d) { return d.key; })
+		.data(filtered_data, function(d) { return d.key; })
       	.enter().append("g")
       	.attr("class", "parameter");
 
@@ -118,18 +131,26 @@ updateData();
 	
 function updateData() 
 {
-d3.json("/JsonRequest/findGetLiveData", function(error, data) 
-{
- 		color.domain(d3.keys(data[0]).filter(function(key) { return key == "parameter_id"; }));
- 		data = data.map( function (d) { 
-    	d.dateTimeTaken = parseDate(d.dateTimeTaken);
-		d.reading = +d.reading;
-		return d;
+d3.json("LiveData.php", function(error, data) 
+{	
+	var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == i;})	
+
+ 	color.domain(d3.keys(filtered_data[0]).filter(function(key) { return key == "testSource_id"; }));
+	
+	filtered_data.map( function (d) {
+	d.inspectionPoint_id = +d.inspectionPoint_id;
+	d.testSource_id = +d.testSource_id;
+	d.testSourceUpperLimit = +d.testSourceUpperLimit; 
+	d.dateTimeTaken = parseDate(d.dateTimeTaken);
+	d.reading = +d.reading;
+	d.parameterType = d.parameterType;
+	d.parameter_id = +d.parameter_id;
+	d.clientSite_id = +d.clientSite_id;
+	d.clientSiteName = d.clientSiteName;
+	return d;
 });
- 
-data.push(data);
-		
-var maxDate = d3.max( data, function(d) { return d.dateTimeTaken; }); 
+	
+var maxDate = d3.max( filtered_data, function(d) { return formatTime(d.dateTimeTaken); }); 
 
 svg.selectAll( ".timeDisplay" )
   .data( [maxDate] )
@@ -138,40 +159,27 @@ svg.selectAll( ".timeDisplay" )
   .append("text")
   .attr("class", "timeDisplay" )
   .attr("x", width )
-  .attr("y", -15)
+  .attr("y", -35)
   .attr("text-anchor", "end" );  
 	
-data = d3.nest().key(function(d) { return d.parameter_id; }).entries(data);
+filtered_data = d3.nest().key(function(d) { return d.testSource_id; }).entries(filtered_data);
 
-
-x.domain([d3.min(data, function(d) { return d3.min(d.values, function (d) { return d.dateTimeTaken; }); }),
-          d3.max(data, function(d) { return d3.max(d.values, function (d) { return d.dateTimeTaken; }); })]);
-y.domain([d3.min(data, function(d) { return d3.min(d.values, function (d) { return d.reading; }); }),
-          d3.max(data, function(d) { return d3.max(d.values, function (d) { return d.reading; }); })]);	
+x.domain([d3.min(filtered_data, function(d) { return d3.min(d.values, function (d) { return d.dateTimeTaken; }); }),
+          d3.max(filtered_data, function(d) { return d3.max(d.values, function (d) { return d.dateTimeTaken; }); })]);
+y.domain([d3.min(filtered_data, function(d) { return d3.min(d.values, function (d) { return d.reading; }); }),
+          d3.max(filtered_data, function(d) { return d3.max(d.values, function (d) { return d.reading; }); })]);	
 		  
-status
-	.append("circle")
-	.data(data)
-   	.attr("cx", 30)
-   	.attr("cy", 25)
-   	.attr("r", 7)
-  	.style("fill", function(d){           
-    if (d.reading > d.testSourceUpperLimit) 
-	{return "red"} else 
-	{ 
-	return "green" 
-	} ;}) 
-
 var newparameters = svg.selectAll("g.parameter")
-      .data(data);
+     .data(filtered_data);
 	
 newparameters
-  	.select( "path.line" )
-   	.transition() 
+  	.select( ".line" )
+	.transition() 
 	.ease("linear")
 	.duration(750) 
-    .attr( "d", function(d) { return line(d.values); });	
-			
+	.attr( "d", function(d) { return line(d.values); })
+	
+					
 svg.select(".x.axis")
   		.transition()
 		.duration(750)
@@ -184,8 +192,27 @@ svg.select(".y.axis")
 		.ease("linear")
 		.call(yAxis); 
 		
-data.shift();
-
-
+status
+	.append("circle")
+	.data(filtered_data)
+   	.attr("cx", 30)
+   	.attr("cy", 20)
+   	.attr("r", 7)
+  	.style("fill", function(d){           
+    if (d.reading > d.testSourceUpperLimit) 
+	{
+		
+		div .html("Site ID:" + " " + d.clientSite_id + "<br/>" + "<br/>" + "Site:" + " " + d.clientSiteName + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + i);
+		return "red"
+	} 
+	else 
+	{ 
+		
+		 div .html("Site ID:" + " " + d.clientSite_id + "<br/>" + "<br/>" + "Site:" + " " + d.clientSiteName + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + i);
+		 return "green"
+	} 
+	
+;}) 
 });
 };});
+}
