@@ -1,0 +1,18 @@
+div#spinner
+{
+    display: none;
+    width:20%;
+    //height: 1000%;
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    //background:url(spinner.gif) no-repeat center #000;
+    text-align:center;
+    //padding:10px;
+    font:normal 16px Tahoma, Geneva, sans-serif;
+    //border:1px solid #666;
+    //margin-left: -50px;
+    //margin-top: -50px;
+    z-index:0;
+    overflow: auto;
+}

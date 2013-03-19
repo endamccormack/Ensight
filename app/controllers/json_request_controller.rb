@@ -184,9 +184,10 @@ class JsonRequestController < ApplicationController
 		end
 		
 
-		json = ActiveSupport::JSON.encode(new_array)
+		#json = ActiveSupport::JSON.encode(new_array)
 
-		render :json => json
+		#render :json => new_array
+		render json: Oj.dump(new_array, mode: :compat)
 
 	end
 
@@ -196,9 +197,10 @@ class JsonRequestController < ApplicationController
 		parameters = Parameter.select(:parameterType)
 		#parameters = find_by_sql("parameterType FROM Parameters")
 
-		json = ActiveSupport::JSON.encode(parameters)
+		#json = ActiveSupport::JSON.encode(parameters)
 
-		render :json => json
+		#render :json => parameters
+		render json: Oj.dump(parameters, mode: :compat)
 
 	end
 	def findGetTestSources
@@ -216,9 +218,11 @@ class JsonRequestController < ApplicationController
 								WHERE testSource_id = tssd.testSource_id)")
 		#parameters = find_by_sql("parameterType FROM Parameters")
 
-		json = ActiveSupport::JSON.encode(data)
+		#json = ActiveSupport::JSON.encode(data)
 
-		render :json => json
+		#render :json => data
+
+		render json: Oj.dump(data, mode: :compat)
 
 	end
 
@@ -230,9 +234,10 @@ class JsonRequestController < ApplicationController
 												FROM GroupEnsightDev.InspectionPoints")
 		#parameters = find_by_sql("parameterType FROM Parameters")
 
-		json = ActiveSupport::JSON.encode(data)
+		#json = ActiveSupport::JSON.encode(data)
 
-		render :json => json
+		#render :json => data
+		render json: Oj.dump(data, mode: :compat)
 
 	end
 
@@ -246,12 +251,13 @@ class JsonRequestController < ApplicationController
 												inner join Parameters on 
 												TestSources.parameter_id = Parameters.id 
 												where DATE(dateTimeTaken) = CURDATE()
-												AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute)")
+												AND dateTimeTaken >= DATE_SUB(NOW(), interval 60 minute)")
 		#parameters = find_by_sql("parameterType FROM Parameters")
 
-		json = ActiveSupport::JSON.encode(data)
+		#json = ActiveSupport::JSON.encode(data)
 
-		render :json => json
+		#render :json => data
+		render json: Oj.dump(data, mode: :compat)
 
 	end
 
@@ -261,9 +267,57 @@ class JsonRequestController < ApplicationController
 												clientSiteLocationLatitude, clientSiteLocationLongtitude
 												FROM ClientSites")
 
-		json = ActiveSupport::JSON.encode(data)
+		#json = ActiveSupport::JSON.encode(data)
 
-		render :json => json
+		#render :json => data
+		render json: Oj.dump(data, mode: :compat)
 
 	end
+
+	def findGetTestSourceid;
+
+		data = TestSourceSampleData.find_by_sql("select distinct (TestSources.id), dateTimeTaken from TestSources
+												INNER JOIN TestSourceSampleData
+												on TestSources.id = TestSourceSampleData.testSource_id
+												where dateTimeTaken = (SELECT Max(dateTimeTaken) FROM TestSourceSampleData)")
+
+		#json = ActiveSupport::JSON.encode(data)
+		new_array = Array.new
+
+		data.each do |x|
+		 	new_array << {:id => x.id, :dateTimeTaken => x.dateTimeTaken.strftime("%G-%m-%d %OH:%M:%OS")}
+		end
+
+		#render :json => new_array
+		render json: Oj.dump(new_array, mode: :compat)
+
+	end
+
+
+	def findGetMapColorIndicator;
+
+		data = TestSourceSampleData.find_by_sql("SELECT testSource_id, inspectionPoint_id, testSourceLocationDescription, 
+												dateTimeTaken, dateTimeReceived, reading, parameterType, 
+												testSourceLowerLimit, testSourceUpperLimit, 
+												testSourceLocationLongtitude, testSourceLocationLatitude 
+												FROM TestSourceSampleData AS tssd INNER JOIN TestSources
+												ON tssd.testSource_id = TestSources.id
+												INNER JOIN Parameters
+												ON TestSources.parameter_id = Parameters.id
+												WHERE dateTimeTaken = " + params[:dateTimeTaken] + " AND " +
+												" testSource_id = " + params[:testSourceId])
+
+		#json = ActiveSupport::JSON.encode(data)
+
+		#render :json => data
+		render json: Oj.dump(data, mode: :compat)
+
+	end
+
+
+	
+
+
+
+
 end

@@ -1,5 +1,7 @@
 function Live(i)
-{	
+{
+	var marker_value = i;
+		
 var margin = {
 top: 65,
 right: 80,
@@ -47,16 +49,17 @@ svg.append("defs").append("clipPath")
     	.attr("width", width)
     	.attr("height", height);
 		
-d3.json("LiveData.php", function(error, data) 
+d3.json("/JsonRequest/findGetLiveData", function(error, data) 
 { 
-	var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == i;})	
+	var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == marker_value;})	
 			
 	color.domain(d3.keys(filtered_data[0]).filter(function(key) { return key == "testSource_id"; }));
 	
 	filtered_data.map( function (d) {
 	d.inspectionPoint_id = +d.inspectionPoint_id;
 	d.testSource_id = +d.testSource_id;
-	d.testSourceUpperLimit = +d.testSourceUpperLimit; 
+	d.testSourceUpperLimit = +d.testSourceUpperLimit;
+	d.testSourceLowerLimit = +d.testSourceLowerLimit; 
 	d.dateTimeTaken = parseDate(d.dateTimeTaken);
 	d.reading = +d.reading;
 	d.parameterType = d.parameterType;
@@ -80,8 +83,8 @@ var status = d3.select("#status")
 		.attr("height", 140);
 		
 var div = d3.select("#status")
-	.append("div")
-	.attr("class", "statustext");
+		.append("div")
+		.attr("class", "statustext");
 	 						  		  
 var legend = svg.selectAll('g')
 		.data(filtered_data, function(d) { return d.key; })
@@ -131,16 +134,17 @@ updateData();
 	
 function updateData() 
 {
-d3.json("LiveData.php", function(error, data) 
+d3.json("/JsonRequest/findGetLiveData", function(error, data) 
 {	
-	var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == i;})	
+	var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == marker_value;})	
 
  	color.domain(d3.keys(filtered_data[0]).filter(function(key) { return key == "testSource_id"; }));
 	
 	filtered_data.map( function (d) {
 	d.inspectionPoint_id = +d.inspectionPoint_id;
 	d.testSource_id = +d.testSource_id;
-	d.testSourceUpperLimit = +d.testSourceUpperLimit; 
+	d.testSourceUpperLimit = +d.testSourceUpperLimit;
+	d.testSourceLowerLimit = +d.testSourceLowerLimit;  
 	d.dateTimeTaken = parseDate(d.dateTimeTaken);
 	d.reading = +d.reading;
 	d.parameterType = d.parameterType;
@@ -173,11 +177,11 @@ var newparameters = svg.selectAll("g.parameter")
      .data(filtered_data);
 	
 newparameters
-  	.select( ".line" )
-	.transition() 
-	.ease("linear")
-	.duration(750) 
-	.attr( "d", function(d) { return line(d.values); })
+  		.select( ".line" )
+		.transition() 
+		.ease("linear")
+		.duration(750) 
+		.attr( "d", function(d) { return line(d.values); })
 	
 					
 svg.select(".x.axis")
@@ -190,27 +194,32 @@ svg.select(".y.axis")
   		.transition()
 		.duration(750)
 		.ease("linear")
-		.call(yAxis); 
-		
+		.call(yAxis);
+		 	
 status
-	.append("circle")
-	.data(filtered_data)
-   	.attr("cx", 30)
-   	.attr("cy", 20)
-   	.attr("r", 7)
-  	.style("fill", function(d){           
-    if (d.reading > d.testSourceUpperLimit) 
-	{
-		
-		div .html("Site ID:" + " " + d.clientSite_id + "<br/>" + "<br/>" + "Site:" + " " + d.clientSiteName + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + i);
-		return "red"
-	} 
-	else 
-	{ 
-		
-		 div .html("Site ID:" + " " + d.clientSite_id + "<br/>" + "<br/>" + "Site:" + " " + d.clientSiteName + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + i);
-		 return "green"
-	} 
+		.data(filtered_data)
+		.append("circle")		
+   		.attr("cx", 30)
+   		.attr("cy", 20)
+   		.attr("r", 7)
+  		.style("fill", function(d){    
+  		     
+    	if (d.values[0].reading > d.values[0].testSourceUpperLimit)
+		{	
+			div .html("Site ID:" + " " + d.values[0].clientSite_id + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + marker_value + "<br/>" + "<br/>" +"Currently non-compliant - " + d.values[0].parameterType + " " + "levels are above regulated limits");
+			return "red"
+
+		} 
+		else if (d.values[0].reading < d.values[0].testSourceLowerLimit)
+		{		
+			div .html("Site ID:" + " " + d.values[0].clientSite_id + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + marker_value + "<br/>" + "<br/>" +"Currently non-compliant - " + d.values[0].parameterType + " " + "levels are below regulated limits");
+			return "red"
+		} 
+		else
+		{ 	
+			div .html ("Site ID:" + " " + d.values[0].clientSite_id + "<br/>" + "<br/>" + "Inspection Point ID:" + " "  + marker_value + "<br/>" + "<br/>" +"Currently compliant");
+			return "green"
+		} 
 	
 ;}) 
 });

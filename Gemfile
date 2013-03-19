@@ -8,7 +8,9 @@ gem 'rails', '3.2.9'
 gem 'mysql2'
 gem 'pg'
 gem 'oj'
-
+gem 'thin'
+gem 'mongrel', '>= 1.2.0.pre2'
+gem 'dispatcher'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

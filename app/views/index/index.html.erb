@@ -1,6 +1,8 @@
 
 <link href="/css/Dashboard.css" rel="stylesheet" type="text/css">
+<link href="/css/loading.css" rel="stylesheet" type="text/css">
 
+<section id ="back"><a href="JavaScript: location.reload(true);"><< Back</a></section> 
     <section id="map">
       <header class="smallheader">Map View</header>
       <section id="mapContainer"></section>
@@ -9,33 +11,41 @@
       <header class="smallheader">Status</header>
     </section>
     <section id="livegraph">
-      <header class="smallheader">Compliance Trend/Live Feed</header>
+      <header class="smallheader">Live Feed</header>
       <section id="livefeed"></section>
     </section>
     <section id = "historicgraph">
-      <header class="smallheader">Historic </header>
-      <section class="selectstyle">
+      <header class="smallheader">Historic</header>
+     <section class="selectstyle"> 
       <section id="selectparameter"><label data-inline="true">Select Parameter:</label></section>
       </section>
-      <section class="selectstyle">
-      <section id="selectmonth"><label data-inline="true">Select Month:</label></section></section>
+     <section class="selectstyle"> 
+      <section id="selectmonth"><label data-inline="true">Select Month:</label></section>
+     </section>
       <section id="historic"></section>
     </section>
 
+<script type="text/javascript" src="/js/loading.js"></script> 
 <script type="text/javascript" src="/js/d3.v3.js"></script> 
 <script type="text/javascript" src="/js/jquery-1.9.1.js"></script> 
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script> 
 <script type="text/javascript" src="/js/LiveGraph.js"></script> 
 <script type="text/javascript" src="/js/HistoricGraph.js"></script> 
-<script type="text/javascript" src="/js/Map.js"></script> 
-<script>
-  $(window).load(function() { 	  
-      $( "#map" ).animate({"width": "1100px"}, "slow").animate({"height": "750px"}, "slow").css("z-index", 999).css("position","absolute");
-	 
-	 	$("#mapContainer").animate({"width": "1100px"}, "slow").animate({"height": "750px"}, "slow"),function(){
 
-  		google.maps.event.trigger(map, 'resize');
-	 }	 
-   });    
+<script type="text/javascript" src="/js/Map.js"></script> 
+
+<script type="text/javascript" src="/js/mapColors.js"></script> 
+
+<script>
+  $(window).load(function() 
+  { 	  
+     $( "#map" ).width(1100).height(750).css("z-index", 999).css("position","absolute");	 
+	 $("#mapContainer").width(1100).height(750);
+	 });	      
 </script>
+
+
+<!--<div id="spinner">
+        Loading...
+    </div>-->
 

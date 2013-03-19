@@ -1,13 +1,12 @@
-
 var map;
-var theLats;
-var theLongs;
 var dataType;
 
-var clientSites, inspectionPoints, testSources, testSourceData;
-var testSourcesLatestData;
-var markers = new Array(); 
-var imgStr;
+var clientSites, inspectionPoints; // Store the results of database queries
+var testSourcesLatestData; // Ditto, but a join
+var markers = new Array(); // Holds the markers that appear on the map
+var infoWindows = new Array(); // Holds the InfoWindows that appear for each marker
+var imgStr; // Filename of marker
+var centerLocation; // To hold center for recentering map
 
 function initialize() {
     var mapOptions = {
@@ -39,20 +38,8 @@ function initialize() {
 			clientSites[i].clientSiteLocationLongtitude = 0;
 		if (clientSites[i].clientSiteLocationLatitude == null)
 			clientSites[i].clientSiteLocationLatitude = 0;
-
-		//theLats.push(clientSites[i].clientSiteLocationLatitude);
-		//theLongs.push(clientSites[i].clientSiteLocationLongtitude);
 	}
-	/*for (var i = 0; i < theLats.length; i++)
-	{
-		alert(theLats[i] + " asasdasd " + theLongs[i]);
-	}*/
-	
-	var theImgs=new Array("/assets/Red.png", "Orange.png", "/assets/Green.png" );
-	//just 3 different custom images these are just place holders do not use, they look rotten!
-
-	//make 3 markers with the positions and images set in the arrays
-	
+	var theImgs=new Array("Red.png", "Orange.png", "Green.png" );
 
 	
 	//get the map
@@ -92,7 +79,6 @@ function initialize() {
 
 	//add the event listeners to the DOM
 	//google.maps.event.addDomListener(window, 'load', initialize);
-	
 });	
 }
 
@@ -105,6 +91,11 @@ function initialize() {
 		//key in this is my API key, get another one because I have loads of things linked to it and a limit that if it 
 		//goes over I have to pay money, use it for testing if you like but change before production
 		document.body.appendChild(script);
+		// Create a reinitialise button
+		/*var reInit = document.createElement("button");
+		reInit.innerHTML="Reinitialise";
+		reInit.onclick=window.location.reload();//refresh page
+		document.body.appendChild(reInit);*/
 	}
 
 	//when the page loads fire the loadScript
@@ -117,11 +108,11 @@ function initialize() {
 	  $( "#status" ).css("opacity", 1);
 	  
 	 $("#map").animate({"height": "350px"}, "slow").animate({"width": "500px"}, "slow").css("position", "relative"),
-	  $("#mapContainer").animate({"width": "500px"}, "slow").animate({"height": "320px"}, "slow"),function(){
-	  	//vip, this is extremely important and took a while to find out, this reinitializes the map when resized
-  		google.maps.event.trigger(map, 'resize');
+	  $("#mapContainer").animate({"width": "500px"}, "slow").animate({"height": "320px"}, "slow",function(){
+	  	// This reinitializes the map when resized
+  		setTimeout(function(){google.maps.event.trigger(map, 'resize')}, 1000);
 		
-	 }
+	 });
 	}
 
 	function doMarkers(type, id)
@@ -136,16 +127,18 @@ function initialize() {
 				{
 					imgStr = "/assets/Green.png";
 					markers[i] = new google.maps.Marker({
+						id: markers.length, // needed to inform the corresponding InfoWindow to appear
 						clientSiteID: clientSites[i].id,
+						infoWindow: null,
 						title: clientSites[i].clientSiteName + ", " + clientSites[i].clientSiteAddress,
 						position: new google.maps.LatLng(clientSites[i].clientSiteLocationLatitude,clientSites[i].clientSiteLocationLongtitude),//the position of where it is on map
-						animation: google.maps.Animation.DROP,//just threw in a drop animation because it looks cool
+						animation: google.maps.Animation.DROP, // marker animation
 						icon: new google.maps.MarkerImage( 
 							imgStr,//the image url string
 							null, /* size is determined at runtime */
 							null, /* origin is 0,0 */
 							null, /* anchor is bottom center of the scaled image */
-							new google.maps.Size(32, 32)//resolution of the image
+							new google.maps.Size(50, 50)//resolution of the image
 					   )
 					});
 				}
@@ -153,7 +146,6 @@ function initialize() {
 				//add the markers to the map
 			  	for(var i = 0; i < markers.length; i++)
   				{
-					
   					markers[i].setMap(map);
 					google.maps.event.addListener(markers[i], 'click', function() {
 						var sRes; // search result
@@ -161,22 +153,19 @@ function initialize() {
 						{
 							if (clientSites[i].id == this.clientSiteID) break;
 						}
-						
-						
 						doMarkers("inspectionPoint", clientSites[i].id);
 						map.setZoom(16);
 						map.setCenter(this.getPosition());
-						
+	
 						});
+		            doInfoWindows(i);
 				}
 				break;
 
 			// -------------------------------------------------------------------------------------------------
 
 			case "inspectionPoint":
-				clearMarkerListeners();
-				markers = new Array();
-
+				clearMarkerListeners();			
 				$.getJSON("/JsonRequest/findGetInspectionPoints", function (data) {
 				inspectionPoints = data;
 
@@ -186,16 +175,17 @@ function initialize() {
 					{
 						imgStr = "/assets/Green.png";
 						markers.push(new google.maps.Marker({
+						id: markers.length, // needed to inform the corresponding InfoWindow to appear
 						inspectionPointID: inspectionPoints[i].id,
 						title: inspectionPoints[i].inspectionPointDescription,
 						position: new google.maps.LatLng(inspectionPoints[i].inspectionPointLocationLatitude,inspectionPoints[i].inspectionPointLocationLongtitude),//the position of where it is on map
-						animation: google.maps.Animation.DROP,//just threw in a drop animation because it looks cool
+						animation: google.maps.Animation.DROP,
 						icon: new google.maps.MarkerImage( 
 							imgStr,//the image url string
 							null, /* size is determined at runtime */
 							null, /* origin is 0,0 */
 							null, /* anchor is bottom center of the scaled image */
-							new google.maps.Size(32, 32)//resolution of the image
+							new google.maps.Size(50, 50)//resolution of the image
 						   )
 						}));
 					}
@@ -206,35 +196,33 @@ function initialize() {
 				{
 					markers[i].setMap(map);
 					google.maps.event.addListener(markers[i], 'click', function() {
-					
 						var sRes; // search result
 						for (var i = 0; i < inspectionPoints.length; i++) 
 						{
 							if (inspectionPoints[i].id == this.inspectionPointID)
 								break;
 						}
-						
-						 
 						doMarkers("testSource", inspectionPoints[i].id);						
 						map.setZoom(17);
+						doStuff();
 						map.setCenter(this.getPosition());
-						doStuff()
-						
 						Historic(i);
 						Live(i);
+						//google.maps.event.trigger(map, 'resize');
+						setTimeout(function(){google.maps.event.trigger(map, 'resize')}, 1000);
+						centerLocation = this.getPosition();
+						setTimeout(function(){map.setCenter(centerLocation);}, 1000);
 						});
-					
+		            doInfoWindows(i);
 				}
 				});
 				break;
-				
 			
 			// -------------------------------------------------------------------------------------------------
 			
 			case "testSource":
 				clearMarkerListeners();
-				markers = new Array();
-
+				showProgress();
 				$.getJSON("/JsonRequest/findGetTestSources", function (data) {
 				testSourcesLatestData = data;
 
@@ -243,23 +231,27 @@ function initialize() {
 					if (testSourcesLatestData[i].inspectionPoint_id == id)
 					{
 						if (parseInt(testSourcesLatestData[i].reading) > parseInt(testSourcesLatestData[i].testSourceUpperLimit) || parseInt(testSourcesLatestData[i].reading) < parseInt(testSourcesLatestData[i].testSourceLowerLimit))
-							imgStr = "/assets/Red.png";
+							imgStr = "Red.png";
 						else
-							imgStr = "/assets/Green.png";
+							imgStr = "Green.png";
 						markers.push(new google.maps.Marker({
+						id: markers.length, // needed to inform the corresponding InfoWindow to appear
 						testSourceID: testSourcesLatestData[i].testSource_id,
+						title: testSourcesLatestData[i].testSourceLocationDescription + 
+								" - Reading: " + testSourcesLatestData[i].reading + "\nLower limit: " + 
+								testSourcesLatestData[i].testSourceLowerLimit + "\nUpper limit: " + testSourcesLatestData[i].testSourceUpperLimit,
 						testSourceLocationDescription: testSourcesLatestData[i].testSourceLocationDescription,
 						reading: testSourcesLatestData[i].reading,
 						lowerLimit: testSourcesLatestData[i].testSourceLowerLimit,
 						upperLimit: testSourcesLatestData[i].testSourceUpperLimit,
 						position: new google.maps.LatLng(testSourcesLatestData[i].testSourceLocationLatitude,testSourcesLatestData[i].testSourceLocationLongtitude),//the position of where it is on map
-						animation: google.maps.Animation.DROP,//just threw in a drop animation because it looks cool
+						animation: google.maps.Animation.DROP,
 						icon: new google.maps.MarkerImage( 
 							imgStr,//the image url string
-							null, /* size is determined at runtime */
-							null, /* origin is 0,0 */
-							null, /* anchor is bottom center of the scaled image */
-							new google.maps.Size(32, 32)//resolution of the image
+							null, 
+							null, 
+							null, 
+							new google.maps.Size(50, 50)//resolution of the image
 						   )
 						}));
 					}
@@ -270,11 +262,8 @@ function initialize() {
   				{
   					markers[i].setMap(map);
 					google.maps.event.addListener(markers[i], 'click', function() {
-						
-						alert(this.testSourceLocationDescription + " - Reading: " + this.reading + 
-								"\nLower limit: " + this.lowerLimit + 
-								"\nUpper limit: " + this.upperLimit);
 						});
+					doInfoWindows(i);
 				}
 				});
 				break;
@@ -284,6 +273,19 @@ function initialize() {
 		}
 	}
 
+    function doInfoWindows(i)
+    {
+        infoWindows.push(new google.maps.InfoWindow({ content: markers[i].title }));
+        markers[i].infoWindow = infoWindows[i];
+
+        google.maps.event.addListener(markers[i], 'mouseover', function () {
+            //infoWindows[this.id].open(map, this);
+        });
+        google.maps.event.addListener(markers[i], 'mouseout', function () {
+            //this.infoWindow.close();
+        });
+    }
+
 	function clearMarkerListeners()
 	{				
 		if (markers.length > 0)
@@ -292,11 +294,14 @@ function initialize() {
   				{
 					google.maps.event.clearListeners(markers[i], 'click');
 					markers[i].setMap(null);
-				}
+				infoWindows[i].close(); // remove the corresponding InfoWindow
 			}
+			markers = new Array();
+			infoWindows = new Array();
+		}
 	}
 
-	function placeholder()
+	function placeholderFunction() // This does nothing
 	{
 		for(var i = 0; i< clientSites.length; i++)
 		{
@@ -308,15 +313,15 @@ function initialize() {
 				imgStr = "/assets/Green.png";
 			markers[i] = new google.maps.Marker({
 			position: new google.maps.LatLng(clientSites[i].clientSiteLocationLatitude,clientSites[i].clientSiteLocationLongtitude),//the position of where it is on map
-			animation: google.maps.Animation.DROP,//just threw in a drop animation because it looks cool
+			animation: google.maps.Animation.DROP,
 			icon: new google.maps.MarkerImage( 
 				theImgs[0],//the image url string
 				null, /* size is determined at runtime */
 				null, /* origin is 0,0 */
 				null, /* anchor is bottom center of the scaled image */
-				new google.maps.Size(32, 32)//resolution of the image
+				new google.maps.Size(50, 50)//resolution of the image
 			   )
 			});
 			//alert(clientSites[i].clientSiteLocationLongtitude + " and " + clientSites[i].clientSiteLocationLatitude);
 		}
-	};
+	}

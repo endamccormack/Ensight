@@ -1,5 +1,7 @@
 function Historic(i)
 {	
+	var marker_value = i;
+		
 var margin = {top: 25, right: 20, bottom: 35, left: 30},
     width = 440,
     height = 275;
@@ -54,13 +56,14 @@ function make_y_axis() {return d3.svg.axis()
 				
 d3.json("/JsonRequest/findHistoricData", function(error,data) 
 {
-var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == i;})	
+var filtered_data = data.filter(function(d) { return d.inspectionPoint_id == marker_value;})	
 	filtered_data.forEach(function(d) {
     	d.dateTimeTaken = parseDate(d.dateTimeTaken);
     	d.reading = +d.reading;
 		d.parameterType = d.parameterType;
 		d.inspectionPoint_id = d.inspectionPoint_id;		
 });
+	hideProgress();
 
 			
 d3.select("#selectparameter")
@@ -70,27 +73,44 @@ d3.select("#selectparameter")
     .data(filtered_data)
     .enter().append("option")
     .text(function(d) { return d.parameterType; })
-		
-		
+	
+ var a = new Array(); 
+        $("#parameterType").children("option").each(function(x){ 
+                test = false; 
+                b = a[x] = $(this).val(); 
+                for (i=0;i<a.length-1;i++){ 
+                        if (b ==a[i]) test =true; 
+                } 
+                if (test) $(this).remove(); 
+        })  
+				
 d3.select("#selectmonth")
 		.append("select")
 		.attr("id", "dateTimeTaken")
       	.selectAll("option")
         .data(filtered_data)
       	.enter().append("option")
-        .text(function(d) { return d.dateTimeTaken.getMonthName(); })		
+        .text(function(d) { return d.dateTimeTaken.getMonthName(); })
+		
+		 var a = new Array(); 
+        $("#dateTimeTaken").children("option").each(function(x){ 
+                test = false; 
+                b = a[x] = $(this).val(); 
+                for (i=0;i<a.length-1;i++){ 
+                        if (b ==a[i]) test =true; 
+                } 
+                if (test) $(this).remove(); 
+        })  		
 
 
 var selectedParameter = document.getElementById("parameterType").value; 
 var selectedMonth = document.getElementById("dateTimeTaken").value;
 	
-//filter data by selected parameter and month	
 var selectedData = filtered_data.filter(function(d) 
 { 
 	return d.parameterType == selectedParameter && d.dateTimeTaken.getMonthName() == selectedMonth;
 });
 				
-//get average reading for each day within selected month
 var newdata = d3.nest()    	
 	.key(function(d) { return d3.time.day(d.dateTimeTaken).toISOString(); })
 	.sortKeys(d3.ascending)	
@@ -156,7 +176,7 @@ svg.selectAll("dot")
 	 div.transition()
 	.duration(200)
 	.style("opacity", .9);	  
-	div .html("Inspection Point:"  + "  " + i + "<br/>" + "<br/>" +"Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" 	+ "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
+	div .html("Inspection Point:"  + "  " + marker_value + "<br/>" + "<br/>" +"Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" 	+ "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
 	.style("left", (d3.event.pageX) + "px")
 	.style("top", (d3.event.pageY - 28) + "px");
 	})
@@ -175,13 +195,11 @@ function upDate()
 var selectedParameter = document.getElementById("parameterType").value;		
 var selectedMonth = document.getElementById("dateTimeTaken").value;
 	
-//filter data by selected parameter and month	
 var selectedData = filtered_data.filter(function(d) 
 { 			
 	return d.parameterType == selectedParameter && d.dateTimeTaken.getMonthName() == selectedMonth;
 });
-		
-//get average reading for each day within selected month	
+			
 var newdata = d3.nest()    	
 	.key(function(d) { return d3.time.day(d.dateTimeTaken).toISOString(); })
 	.sortKeys(d3.ascending)	
@@ -232,7 +250,7 @@ circle
 	 div.transition()
 	.duration(200)
 	.style("opacity", .9);	  
-	div .html("Inspection Point:"  + "  " + i + "<br/>" + "<br/>" +"Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" + "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
+	div .html("Inspection Point:"  + "  " + marker_value + "<br/>" + "<br/>" +"Date taken:" + "  " + newdate(d.key) + "<br/>" + "<br/>" + "Average Reading:" + "  " + d.values.mean + "<br/>" + "<br/>" + 		"Parameter:" +  "  " + selectedParameter)
 	.style("left", (d3.event.pageX) + "px")
 	.style("top", (d3.event.pageY - 28) + "px");
 	})
