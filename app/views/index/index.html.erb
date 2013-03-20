@@ -34,15 +34,14 @@
 
 <script type="text/javascript" src="/js/Map.js"></script> 
 
-<script type="text/javascript" src="/js/mapColors.js"></script> 
-
-<script>
+<% if(session[:clientname] != nil) %>
+<script type="text/javascript">
   $(window).load(function() 
-  { 	  
-     $( "#map" ).width(1100).height(750).css("z-index", 999).css("position","absolute");	 
-	 $("#mapContainer").width(1100).height(750);
-	 });	      
+  {     
+     $( "#map" ).css("z-index", 999);   
+   });    
 </script>
+<% end %>
 
 
 <!--<div id="spinner">

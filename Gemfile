@@ -8,7 +8,7 @@ gem 'rails', '3.2.9'
 gem 'mysql2'
 gem 'pg'
 gem 'oj'
-gem 'thin'
+#gem 'thin'
 gem 'mongrel', '>= 1.2.0.pre2'
 gem 'dispatcher'
 # Gems used only for assets and not required
@@ -30,7 +30,7 @@ gem 'jquery-rails'
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+# gem 'jbuilder'	
 
 # Use unicorn as the app server
 # gem 'unicorn'

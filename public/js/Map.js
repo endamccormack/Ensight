@@ -223,6 +223,7 @@ function initialize() {
 			case "testSource":
 				clearMarkerListeners();
 				showProgress();
+				
 				$.getJSON("/JsonRequest/findGetTestSources", function (data) {
 				testSourcesLatestData = data;
 
@@ -230,15 +231,11 @@ function initialize() {
 				{
 					if (testSourcesLatestData[i].inspectionPoint_id == id)
 					{
-						if (parseInt(testSourcesLatestData[i].reading) > parseInt(testSourcesLatestData[i].testSourceUpperLimit) || parseInt(testSourcesLatestData[i].reading) < parseInt(testSourcesLatestData[i].testSourceLowerLimit))
-							imgStr = "Red.png";
-						else
-							imgStr = "Green.png";
+						imgStr = "/assets/Green.png";
 						markers.push(new google.maps.Marker({
 						id: markers.length, // needed to inform the corresponding InfoWindow to appear
 						testSourceID: testSourcesLatestData[i].testSource_id,
-						title: testSourcesLatestData[i].testSourceLocationDescription + 
-								" - Reading: " + testSourcesLatestData[i].reading + "\nLower limit: " + 
+						title: testSourcesLatestData[i].testSourceLocationDescription + "\nLower limit: " + 
 								testSourcesLatestData[i].testSourceLowerLimit + "\nUpper limit: " + testSourcesLatestData[i].testSourceUpperLimit,
 						testSourceLocationDescription: testSourcesLatestData[i].testSourceLocationDescription,
 						reading: testSourcesLatestData[i].reading,
@@ -266,6 +263,7 @@ function initialize() {
 					doInfoWindows(i);
 				}
 				});
+				addColoredMarkers(id);
 				break;
 
 			default:
@@ -324,4 +322,56 @@ function initialize() {
 			});
 			//alert(clientSites[i].clientSiteLocationLongtitude + " and " + clientSites[i].clientSiteLocationLatitude);
 		}
+	}
+
+	function addColoredMarkers(ip_id)
+	{
+		$.getJSON("/JsonRequest/findGetTestSourceid?inspectionPoint_id=" + ip_id, function (data) {
+
+	/*[{"dateTimeReceived":"2013-03-18T18:24:42Z","dateTimeTaken":"2013-03-18T18:24:15Z","inspectionPoint_id":1,
+	"parameterType":"Temperature","reading":"5.5","testSourceLocationDescription":"Enda's test source - Sligo",
+	"testSourceLocationLatitude":"54.278105","testSourceLocationLongtitude":"-8.496348","testSourceLowerLimit":
+	"4.0","testSourceUpperLimit":"25.0","testSource_id":1}]*/
+
+	//JsonRequest/findGetMapColorIndicator?dateTimeTaken='2013-03-18%2018:24:15'&testSourceId=1
+	var markers = new Array();
+
+		for(var j = 0;  j < data.length; j++)
+		{
+			$.getJSON("/JsonRequest/findGetMapColorIndicator?dateTimeTaken='" + data[j].dateTimeTaken + "'&testSourceId=" + data[j].id , function (colorIndData) {
+				//alert(colorIndData[0].testSource_id);
+				if (parseInt(colorIndData[0].reading) > parseInt(colorIndData[0].testSourceUpperLimit) || parseInt(colorIndData[0].reading) < parseInt(colorIndData[0].testSourceLowerLimit))
+					imgStr = "Red.png";
+				else
+					imgStr = "Green.png";
+				markers.push(new google.maps.Marker({
+						id: markers.length, // needed to inform the corresponding InfoWindow to appear
+						testSourceID: colorIndData[0].testSource_id,
+						title: colorIndData[0].testSourceLocationDescription + "\nLower limit: " + 
+								colorIndData[0].testSourceLowerLimit + "\nUpper limit: " + colorIndData[0].testSourceUpperLimit,
+						testSourceLocationDescription: colorIndData[0].testSourceLocationDescription,
+						reading: colorIndData[0].reading,
+						lowerLimit: colorIndData[0].testSourceLowerLimit,
+						upperLimit: colorIndData[0].testSourceUpperLimit,
+						position: new google.maps.LatLng(colorIndData[0].testSourceLocationLatitude,colorIndData[0].testSourceLocationLongtitude),//the position of where it is on map
+						animation: google.maps.Animation.DROP,
+						icon: new google.maps.MarkerImage( 
+							imgStr,//the image url string
+							null, 	
+							null, 
+							null, 
+							new google.maps.Size(50, 50)//resolution of the image
+						   )
+						}));
+			});
+		}
+		//add the markers to the map
+	  	for(var i = 0; i < markers.length; i++)
+			{
+				markers[i].setMap(map);
+			google.maps.event.addListener(markers[i], 'click', function() {
+				});
+			doInfoWindows(i);
+		}
+	});
 	}

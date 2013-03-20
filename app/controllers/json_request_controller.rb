@@ -149,13 +149,20 @@ class JsonRequestController < ApplicationController
 
 	def findHistoricData
 
-		historicData = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType, inspectionPoint_id
-															FROM TestSourceSampleData 
+		#historicData = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType, inspectionPoint_id
+		#													FROM TestSourceSampleData 
+		#													INNER JOIN TestSources on
+		#													TestSourceSampleData.testSource_id = TestSources.id
+		#													inner join Parameters on
+		#													TestSources.parameter_id = Parameters.id
+		#													GROUP BY dateTimeTaken")
+
+		#optimized query
+		historicData = TestSourceSampleData.select("dateTimeTaken, reading, parameterType, inspectionPoint_id").joins("
 															INNER JOIN TestSources on
 															TestSourceSampleData.testSource_id = TestSources.id
 															inner join Parameters on
-															TestSources.parameter_id = Parameters.id
-															GROUP BY dateTimeTaken")
+															TestSources.parameter_id = Parameters.id").group("dateTimeTaken")
 		new_array = Array.new
 
 		historicData.each do |x|
@@ -204,25 +211,31 @@ class JsonRequestController < ApplicationController
 
 	end
 	def findGetTestSources
-		#SELECT parameterType FROM Parameters
 
-		data = TestSourceSampleData.find_by_sql("SELECT testSource_id, inspectionPoint_id, testSourceLocationDescription, 
-								dateTimeTaken, dateTimeReceived, reading, parameterType, 
-								testSourceLowerLimit, testSourceUpperLimit, 
-								testSourceLocationLongtitude, testSourceLocationLatitude 
-								FROM TestSourceSampleData AS tssd INNER JOIN TestSources
-								ON tssd.testSource_id = TestSources.id
-								INNER JOIN Parameters
-								ON TestSources.parameter_id = Parameters.id
-								WHERE dateTimeTaken = (SELECT Max(dateTimeTaken) FROM TestSourceSampleData
-								WHERE testSource_id = tssd.testSource_id)")
-		#parameters = find_by_sql("parameterType FROM Parameters")
+		#data = TestSourceSampleData.find_by_sql("SELECT distinct(testSource_id), inspectionPoint_id, testSourceLocationDescription, 
+		#										dateTimeTaken, dateTimeReceived, reading, parameterType, 
+		#										testSourceLowerLimit, testSourceUpperLimit, 
+		#										testSourceLocationLongtitude, testSourceLocationLatitude 
+		#										FROM TestSourceSampleData AS tssd INNER JOIN TestSources
+		#										ON tssd.testSource_id = TestSources.id
+		#										INNER JOIN Parameters
+		#										ON TestSources.parameter_id = Parameters.id
+		#										group by testSource_id")
+
+		data = TestSourceSampleData.select("distinct(testSource_id), inspectionPoint_id, testSourceLocationDescription, 
+												dateTimeTaken, dateTimeReceived, reading, parameterType, 
+												testSourceLowerLimit, testSourceUpperLimit, 
+												testSourceLocationLongtitude, testSourceLocationLatitude").joins("
+												INNER JOIN TestSources
+												ON TestSourceSampleData.testSource_id = TestSources.id
+												INNER JOIN Parameters
+												ON TestSources.parameter_id = Parameters.id").group("testSource_id")
 
 		#json = ActiveSupport::JSON.encode(data)
 
-		#render :json => data
+		render :json => data
 
-		render json: Oj.dump(data, mode: :compat)
+		#render json: Oj.dump(data, mode: :compat)
 
 	end
 
@@ -244,28 +257,64 @@ class JsonRequestController < ApplicationController
 	def findGetLiveData
 		#SELECT parameterType FROM Parameters
 
-		data = TestSourceSampleData.find_by_sql("SELECT *
-												FROM TestSourceSampleData
-												INNER JOIN TestSources on
-												TestSourceSampleData.testSource_id = TestSources.id
-												inner join Parameters on 
-												TestSources.parameter_id = Parameters.id 
-												where DATE(dateTimeTaken) = CURDATE()
-												AND dateTimeTaken >= DATE_SUB(NOW(), interval 60 minute)")
+		#data = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType, inspectionPoint_id, testSource_id, testSourceUpperLimit, parameter_id,
+		#										clientSite_id, clientSiteName, testSourceLowerLimit
+		#										FROM TestSourceSampleData
+		#										INNER JOIN TestSources on
+		#										TestSourceSampleData.testSource_id = TestSources.id
+		#										inner join InspectionPoints on
+		#										InspectionPoints.id = TestSources.inspectionPoint_id
+		#										inner join Parameters on 
+		#										TestSources.parameter_id = Parameters.id 
+		#										inner join ClientSites on
+		#										Parameters.client_id = ClientSites.client_id
+		#										where DATE(dateTimeTaken) = CURDATE()
+		#										AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute)
+		#										order by dateTimeTaken")
 		#parameters = find_by_sql("parameterType FROM Parameters")
 
-		#json = ActiveSupport::JSON.encode(data)
+		#data = TestSourceSampleData.find_by_sql("SELECT dateTimeTaken, reading, parameterType, inspectionPoint_id, testSource_id, testSourceUpperLimit, parameter_id,
+		#										clientSite_id, clientSiteName, testSourceLowerLimit
+		#										FROM TestSourceSampleData
+		#										INNER JOIN TestSources on
+		#										TestSourceSampleData.testSource_id = TestSources.id
+		#										inner join InspectionPoints on
+		#										InspectionPoints.id = TestSources.inspectionPoint_id
+		#										inner join Parameters on 
+		#										TestSources.parameter_id = Parameters.id 
+		#										inner join ClientSites on
+		#										Parameters.client_id = ClientSites.client_id")
 
-		#render :json => data
-		render json: Oj.dump(data, mode: :compat)
+		data = TestSourceSampleData.select("dateTimeTaken, reading, parameterType, inspectionPoint_id, testSource_id, testSourceUpperLimit, parameter_id,
+										clientSite_id, clientSiteName, testSourceLowerLimit").joins(
+										"INNER JOIN TestSources on
+										TestSourceSampleData.testSource_id = TestSources.id
+										inner join InspectionPoints on
+										InspectionPoints.id = TestSources.inspectionPoint_id
+										inner join Parameters on 
+										TestSources.parameter_id = Parameters.id 
+										inner join ClientSites on
+										Parameters.client_id = ClientSites.client_id").where("
+										DATE(dateTimeTaken) = CURDATE()
+										AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute)
+										").group("dateTimeTaken")
+			
+
+		new_array = Array.new
+
+		data.each do |x|
+		 	new_array << {:dateTimeTaken => x.dateTimeTaken.strftime("%G-%m-%d %OH:%M:%OS"), :reading => x.reading, :parameterType => x.parameterType, :inspectionPoint_id => x.inspectionPoint_id, :testSource_id => x.testSource_id, :testSourceUpperLimit => x.testSourceUpperLimit, :parameter_id => x.parameter_id, :clientSite_id => x.clientSite_id, :clientSiteName => x.clientSiteName, :testSourceLowerLimit => x.testSourceLowerLimit }
+		end
+
+		#render :json => new_array
+		render json: Oj.dump(new_array, mode: :compat)
+
 
 	end
 
 	def findGetClientSites
 
-		data = TestSourceSampleData.find_by_sql("SELECT id, client_id, clientSiteName, clientSiteAddress, 
-												clientSiteLocationLatitude, clientSiteLocationLongtitude
-												FROM ClientSites")
+		data = ClientSite.select("id, client_id, clientSiteName, clientSiteAddress, clientSiteLocationLatitude, clientSiteLocationLongtitude")
 
 		#json = ActiveSupport::JSON.encode(data)
 
@@ -276,11 +325,19 @@ class JsonRequestController < ApplicationController
 
 	def findGetTestSourceid;
 
-		data = TestSourceSampleData.find_by_sql("select distinct (TestSources.id), dateTimeTaken from TestSources
-												INNER JOIN TestSourceSampleData
-												on TestSources.id = TestSourceSampleData.testSource_id
-												where dateTimeTaken = (SELECT Max(dateTimeTaken) FROM TestSourceSampleData)")
+		#data = TestSource.find_by_sql("select distinct (TestSources.id), dateTimeTaken 
+		#										from TestSources
+		#										INNER JOIN TestSourceSampleData
+		#										on TestSources.id = TestSourceSampleData.testSource_id
+		#										WHERE inspectionPoint_id = " + params[:inspectionPoint_id] + " AND
+		#										dateTimeTaken = (SELECT Max(dateTimeTaken) FROM TestSourceSampleData)")
 
+		data = TestSource.select("distinct (TestSources.id), dateTimeTaken").joins("
+									INNER JOIN TestSourceSampleData
+									on TestSources.id = TestSourceSampleData.testSource_id
+									").where(["inspectionPoint_id = ? AND
+											dateTimeTaken = (SELECT Max(dateTimeTaken) FROM TestSourceSampleData)",params[:inspectionPoint_id] ])
+											
 		#json = ActiveSupport::JSON.encode(data)
 		new_array = Array.new
 
@@ -313,11 +370,4 @@ class JsonRequestController < ApplicationController
 		render json: Oj.dump(data, mode: :compat)
 
 	end
-
-
-	
-
-
-
-
 end

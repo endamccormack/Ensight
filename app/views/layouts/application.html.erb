@@ -19,6 +19,24 @@
 	<script type="text/javascript" src="/css/js/jquery-1.8.2.js"></script> 
 	<!--<script type="text/javascript" src="js/jquery-1.9.1.js"></script>-->
   <script type="text/javascript" src="/css/js/jquery-ui-1.9.1.custom.min.js"></script>
+  <STYLE TYPE="text/css">
+  	#contentwrapper {
+	width: 1100px;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
+	border-radius: 10px;
+	background-color: #000;
+	background: rgb(0, 0, 0);
+	background: rgba(0, 0, 0, 0.7);
+ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+	box-shadow: 5px 5px 15px #000000;
+	padding: 20px;
+}
+
+  </STYLE>
   
 
 </head>
@@ -79,7 +97,7 @@
     <% end %>
 
 </div>
-<div id="spinner" title="Loading" style="z-index:1000; position:fixed;">
+<div id="spinner" title="Loading" style="z-index:1000; position:fixed; display:none; ">
    <span stype="verticle-align: middle;"><img src="/assets/loading.gif"/> Loading, please wait... </span>
 </div>
 <script type="text/javascript" src="/js/login.js"></script>
