@@ -9,4 +9,12 @@ skip_before_filter  :verify_authenticity_token
 			return
 		end
 	end
+
+	def fireTheSproc
+		ActiveRecord::Base.connection.select_all("CALL add_new_random_reading")
+
+		sleep 15
+		ActiveRecord::Base.connection.select_all("CALL LEAVE add_new_random_reading;")
+
+	end
 end

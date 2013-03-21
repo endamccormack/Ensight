@@ -44,6 +44,7 @@
 	
 
 	<div id="wrapper">
+		
 		<% if(session[:clientname] != nil) %>
 			<a href="/index/logout" style="float:right; ">
 				<input type="button" value="Logout" id="logout" style="font-size:10px; border: 1px solid #323232;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover" />
@@ -65,6 +66,7 @@
 		</div>
 		<div id="dialog-form" title="Login">
     <p style="margin:0; margin-top: 7px;" class="validateTips">All form fields are required.</p>
+    <p style="color:red; margin:0; font-size:12px;"> For demo Username:Abbott Password:password99 </p>
     <p style="color:red; margin:0; font-size:12px;"> <%= flash[:notice] %> </p>
 	<%= form_tag({:action => 'attempt_login'}, {:id => "loginForm"}) do %>
 
