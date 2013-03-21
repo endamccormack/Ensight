@@ -33,7 +33,7 @@ var yAxis = d3.svg.axis()
     	.orient("left");
 
 var line = d3.svg.line()
-    	.interpolate("basis")
+    	.interpolate("linear")
     	.x(function(d) { return x(d.dateTimeTaken); })
     	.y(function(d) { return y(d.reading); });
 

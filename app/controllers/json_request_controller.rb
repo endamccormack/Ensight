@@ -162,7 +162,7 @@ class JsonRequestController < ApplicationController
 															INNER JOIN TestSources on
 															TestSourceSampleData.testSource_id = TestSources.id
 															inner join Parameters on
-															TestSources.parameter_id = Parameters.id").group("dateTimeTaken")
+															TestSources.parameter_id = Parameters.id").order("dateTimeTaken")
 		new_array = Array.new
 
 		historicData.each do |x|
@@ -296,9 +296,12 @@ class JsonRequestController < ApplicationController
 										inner join ClientSites on
 										Parameters.client_id = ClientSites.client_id").where("
 										DATE(dateTimeTaken) = CURDATE()
-										AND dateTimeTaken >= DATE_SUB(NOW(), interval 10 minute)
-										").group("dateTimeTaken")
-			
+										AND dateTimeTaken >= DATE_SUB(NOW(), interval 3 minute)
+										").order("dateTimeTaken")
+
+
+
+
 
 		new_array = Array.new
 

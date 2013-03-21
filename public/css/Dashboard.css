@@ -185,7 +185,7 @@ option {
 }
 .line {
 	fill: none;
-	stroke-width:0.5px;
+	stroke-width:1.5px;
 }
 .myline {
 	fill: none;
@@ -196,10 +196,10 @@ text {
 	fill: #9b9b9b;
 }
 .x.axis .minor {
-	stroke-opacity: 0.1;
+	stroke-opacity: 0.4;
 }
 .x.axis .major {
-	stroke-opacity: 0.1;
+	stroke-opacity: 0.4;
 }
 #livefeed .x.axis path {
 	display:none;
@@ -207,7 +207,7 @@ text {
 #historic .line {
 	fill: none;
 	stroke: #8cc13f;
-	stroke-width: 0.5px;
+	stroke-width: 1px;
 }
 #historicgraph {
 	opacity:0;
@@ -283,14 +283,14 @@ margin:0px;
 }
 .grid .tick {
 	stroke: lightgrey;
-	opacity: 0.1;
+	opacity: 0.4;
 }
 .grid path {
 	stroke-width: 0;
 }
 .grid {
 	stroke: lightgrey;
-	opacity: 0.1;
+	opacity: 0.4;
 }
 #footer {
 	color: #8cc13f;
